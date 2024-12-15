@@ -1,0 +1,41 @@
+name: "traefik"
+
+services:
+  traefik:
+    container_name: "traefik"
+    depends_on:
+      - "crowdsec"
+    hostname: "traefik"
+    image: "traefik:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
+      traefik.http.routers.traefik-dashboard.entrypoints: "websecure"
+      traefik.http.routers.traefik-dashboard.middlewares: "wg-local-accesslist"
+      traefik.http.routers.traefik-dashboard.rule: "Host(`${TRAEFIK_DOMAIN}`)"
+      traefik.http.routers.traefik-dashboard.service: "traefik-dashboard"
+      traefik.http.routers.traefik-dashboard.tls: "true"
+      traefik.http.routers.traefik-dashboard.tls.options: "private@file"
+      traefik.http.services.traefik-dashboard.loadbalancer.server.port: "8080"
+    networks:
+      - "infra-1"
+    ports:
+      - "${PRIVATE_IPV4}:80:80/tcp"
+      - "${PRIVATE_IPV4}:443:443/tcp"
+      - "${PRIVATE_IPV4}:443:443/udp"
+      - "${PUBLIC_IP_IPV4}:80:80"
+      - "${PUBLIC_IP_IPV4}:443:443/tcp"
+      - "${PUBLIC_IP_IPV4}:443:443/udp"
+      - "${PRIVATE_IPV6}:80:80/tcp"
+      - "${PRIVATE_IPV6}:443:443/tcp"
+      - "${PRIVATE_IPV6}:443:443/udp"
+      - "${PUBLIC_IP_IPV6}:80:80"
+      - "${PUBLIC_IP_IPV6}:443:443/tcp"
+      - "${PUBLIC_IP_IPV6}:443:443/udp"
+    restart: "always"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "../acme.sh/certs:/certs:ro"
+      - "./config:/etc/traefik:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./logs:/var/log/traefik"
