@@ -1,0 +1,10 @@
+*
+
+!.gitignore
+!docker-compose.yml
+
+!*/
+!**/.gitkeep
+!**/.editorconfig
+!/config/nginx.conf
+!/config/conf.d/*.conf
