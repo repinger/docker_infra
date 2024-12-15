@@ -1,0 +1,19 @@
+name: "crowdsec"
+
+services:
+  crowdsec:
+    container_name: "crowdsec"
+    environment:
+      COLLECTIONS: "crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve crowdsecurity/linux crowdsecurity/iptables"
+    hostname: "crowdsec"
+    image: "crowdsecurity/crowdsec:latest"
+    networks:
+      infra-1:
+        ipv4_address: "${CROWDSEC_IP_ADDR}"
+    restart: "always"
+    volumes:
+      - "./data/config:/etc/crowdsec"
+      - "./data/db:/var/lib/crowdsec/data"
+      - "/var/log:/var/log:ro"
+      - "../traefik/logs:/logs/traefik:ro"
+      - "/etc/localtime:/etc/localtime:ro"
