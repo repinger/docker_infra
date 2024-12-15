@@ -1,0 +1,44 @@
+name: "server_infra"
+
+include:
+  # Acme.sh
+  - path: acme.sh/docker-compose.yml
+
+  # CrowdSec
+  - path: crowdsec/docker-compose.yml
+
+  # DNS service
+  - path: dns/docker-compose.yml
+
+  # E-mail service
+  - path: email/docker-compose.yml
+
+  # Web service
+  - path: nginx/docker-compose.yml
+
+  # Rsync backup
+  - path: rclone/docker-compose.yml
+
+  # Reverse proxy
+  - path: traefik/docker-compose.yml
+
+networks:
+  infra-1:
+    name: infra-1
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+      - subnet: ${DOCKER_NET_IPV4_SUBNET}
+
+  infra_v6-1:
+    name: infra_v6-1
+    enable_ipv6: true
+    driver_opts:
+      # No NAT for IPv6
+      com.docker.network.bridge.enable_ip_masquerade: "false"
+    ipam:
+      driver: default
+      config:
+        # Public IPv6 subnet
+        - subnet: ${DOCKER_NET_IPV6_SUBNET}
