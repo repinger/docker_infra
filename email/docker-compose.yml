@@ -1,0 +1,63 @@
+name: "Stalwart_email"
+
+services:
+  stalwart-email:
+    container_name: "stalwart-email"
+    hostname: "stalwart-email"
+    image: "stalwartlabs/mail-server:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.stalwart.entrypoints: "websecure"
+      traefik.http.routers.stalwart.rule: "Host(`autodiscover.repinger.com`)\
+                                          || Host(`autoconfig.repinger.com`) || Host(`mta-sts.repinger.com`)\
+                                          || Host(`${STALWART_DOMAIN}`)"
+      traefik.http.routers.stalwart.service: "stalwart"
+      traefik.http.routers.stalwart.tls: "true"
+      traefik.http.routers.stalwart.tls.options: "private@file"
+      traefik.http.services.stalwart.loadbalancer.server.port: "8080"
+    networks:
+      - "infra-1"
+    ports:
+      - "${PUBLIC_IP_IPV4}:25:25"
+      - "${PUBLIC_IP_IPV4}:465:465"
+      - "${PUBLIC_IP_IPV4}:993:993"
+      - "${PUBLIC_IP_IPV4}:995:995"
+      - "${PUBLIC_IP_IPV6}:25:25"
+      - "${PUBLIC_IP_IPV6}:465:465"
+      - "${PUBLIC_IP_IPV6}:993:993"
+      - "${PUBLIC_IP_IPV6}:995:995"
+    restart: "always"
+    volumes:
+      - "./stalwart:/opt/stalwart-mail"
+      - "/etc/localtime:/etc/localtime:ro"
+      - "../acme.sh/certs:/certs:ro"
+
+  roundcube:
+    container_name: "roundcube"
+    depends_on:
+        - "stalwart-email"
+        - "traefik"
+    environment:
+      ROUNDCUBEMAIL_DB_TYPE: "sqlite"
+      ROUNDCUBEMAIL_DEFAULT_HOST: "ssl://${ROUNDCUBE_MAIL_SERVER}"
+      ROUNDCUBEMAIL_DEFAULT_PORT: "993"
+      ROUNDCUBEMAIL_SMTP_SERVER: "ssl://${ROUNDCUBE_MAIL_SERVER}"
+      ROUNDCUBEMAIL_SMTP_PORT: "465"
+    hostname: "roundcube"
+    image: "roundcube/roundcubemail:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
+      traefik.http.routers.roundcube.entrypoints: "websecure"
+      traefik.http.routers.roundcube.middlewares: "wg-local-accesslist"
+      traefik.http.routers.roundcube.rule: "Host(`${ROUNDCUBE_DOMAIN}`)"
+      traefik.http.routers.roundcube.service: "roundcube"
+      traefik.http.routers.roundcube.tls: "true"
+      traefik.http.routers.roundcube.tls.options: "private@file"
+      traefik.http.services.roundcube.loadbalancer.server.port: "80"
+    networks:
+      - "infra-1"
+    restart: "always"
+    volumes:
+      - "./roundcube/config:/var/roundcube/config"
+      - "./roundcube/db:/var/roundcube/db"
