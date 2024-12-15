@@ -1,0 +1,88 @@
+name: "dns"
+
+services:
+  adguardhome:
+    container_name: "adguardhome"
+    hostname: "adguardhome"
+    image: "adguard/adguardhome:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
+      traefik.http.routers.adguardhome.entrypoints: "websecure"
+      traefik.http.routers.adguardhome.middlewares: "wg-local-accesslist"
+      traefik.http.routers.adguardhome.rule: "Host(`${ADGUARDHOME_DOMAIN}`)"
+      traefik.http.routers.adguardhome.service: "adguardhome"
+      traefik.http.routers.adguardhome.tls: "true"
+      traefik.http.routers.adguardhome.tls.options: "private@file"
+      traefik.http.services.adguardhome.loadbalancer.server.port: "80"
+    networks:
+      - "infra-1"
+    ports:
+      - "${PRIVATE_IPV4}:53:53/tcp"
+      - "${PRIVATE_IPV4}:53:53/udp"
+      - "${PUBLIC_IP_IPV4}:853:853/tcp"
+      - "${PUBLIC_IP_IPV4}:853:853/udp"
+      - "${PRIVATE_IPV6}:53:53/tcp"
+      - "${PRIVATE_IPV6}:53:53/udp"
+      - "${PUBLIC_IP_IPV6}:853:853/tcp"
+      - "${PUBLIC_IP_IPV6}:853:853/udp"
+    restart: "always"
+    volumes:
+      - "./adguardhome/conf:/opt/adguardhome/conf"
+      - "./adguardhome/work:/opt/adguardhome/work"
+      - "../acme.sh/certs:/certs:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+
+  bind9:
+    container_name: "bind9"
+    hostname: "bind9"
+    image: "ubuntu/bind9:latest"
+    environment:
+      - "BIND9_USER=root"
+      - "TZ=Asia/Jakarta"
+    networks:
+      - "infra-1"
+    restart: "always"
+    volumes:
+      - "./bind9/config:/etc/bind:ro"
+      - "./bind9/cache:/var/cache/bind"
+
+  doh-server:
+    container_name: "doh-server"
+    hostname: "doh-server"
+    depends_on:
+      - "adguardhome"
+      - "traefik"
+    image: "repinger/doh-server:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapihost: "crowdsec:8080"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapikey: "${CROWDSEC_LAPI_KEY}"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdsecmode: "stream"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.enabled: "true"
+
+      traefik.http.middlewares.doh-server-header.headers.customresponseheaders.Cache-Control: "public, max-age=240"
+      traefik.http.middlewares.doh-server-header.headers.customresponseheaders.Content-Security-Policy: "default-src 'none'"
+      traefik.http.middlewares.doh-server-header.headers.customresponseheaders.Permissions-Policy: "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=(), clipboard-read=(), clipboard-write=(), gamepad=(), speaker-selection=(), conversion-measurement=(), focus-without-user-activation=(), hid=(), idle-detection=(), interest-cohort=(), serial=(), sync-script=(), trust-token-redemption=(), unload=(), window-placement=(), vertical-scroll=()"
+      traefik.http.middlewares.doh-server-header.headers.customresponseheaders.Server: ""
+      traefik.http.middlewares.doh-server-header.headers.customresponseheaders.Strict-Transport-Security: "max-age=63072000; includeSubDomains; preload"
+      traefik.http.middlewares.doh-server-header.headers.customresponseheaders.X-Content-Type-Options: "nosniff"
+      traefik.http.middlewares.doh-server-header.headers.customresponseheaders.X-Frame-Options: "DENY"
+      traefik.http.middlewares.doh-server-header.headers.customresponseheaders.X-Powered-By: ""
+      traefik.http.middlewares.doh-server-header.headers.customresponseheaders.X-Xss-Protection: "0"
+
+      traefik.http.routers.doh-server.entrypoints: "websecure"
+      traefik.http.routers.doh-server.middlewares: "crowdsec-traefik,doh-server-header"
+      traefik.http.routers.doh-server.rule: "Host(`doh.repinger.my.id`) && PathPrefix(`/dns-query`) || Host(`dns.repinger.my.id`)\
+                                            && PathPrefix(`/dns-query`) || Host(`dot.repinger.my.id`) && PathPrefix(`/dns-query`)\
+                                            || Host(`doh.repinger.com`) && PathPrefix(`/dns-query`) || Host(`dns.repinger.com`)\
+                                            && PathPrefix(`/dns-query`) || Host(`dot.repinger.com`) && PathPrefix(`/dns-query`)"
+      traefik.http.routers.doh-server.service: "doh-server"
+      traefik.http.routers.doh-server.tls: "true"
+      traefik.http.routers.doh-server.tls.options: "public@file"
+      traefik.http.services.doh-server.loadbalancer.server.port: "3000"
+    networks:
+      - "infra-1"
+    restart: "always"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
