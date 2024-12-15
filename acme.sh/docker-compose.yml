@@ -1,0 +1,15 @@
+name: "acme.sh"
+
+services:
+  acme-sh:
+    image: neilpang/acme.sh:latest
+    container_name: acme.sh
+    hostname: acme.sh
+    volumes:
+      - ./data:/acme.sh
+      - ./certs:/certs
+    network_mode: host
+    command: daemon
+    stdin_open: true
+    tty: true
+    restart: always
