@@ -32,32 +32,25 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "../acme.sh/certs:/certs:ro"
 
-  roundcube:
-    container_name: "roundcube"
+  snappymail:
+    container_name: "snappymail"
     depends_on:
         - "stalwart-email"
         - "traefik"
-    environment:
-      ROUNDCUBEMAIL_DB_TYPE: "sqlite"
-      ROUNDCUBEMAIL_DEFAULT_HOST: "ssl://${ROUNDCUBE_MAIL_SERVER}"
-      ROUNDCUBEMAIL_DEFAULT_PORT: "993"
-      ROUNDCUBEMAIL_SMTP_SERVER: "ssl://${ROUNDCUBE_MAIL_SERVER}"
-      ROUNDCUBEMAIL_SMTP_PORT: "465"
-    hostname: "roundcube"
-    image: "roundcube/roundcubemail:latest"
+    hostname: "snappymail"
+    image: "djmaze/snappymail:latest"
     labels:
       traefik.enable: "true"
       traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
-      traefik.http.routers.roundcube.entrypoints: "websecure"
-      traefik.http.routers.roundcube.middlewares: "wg-local-accesslist"
-      traefik.http.routers.roundcube.rule: "Host(`${ROUNDCUBE_DOMAIN}`)"
-      traefik.http.routers.roundcube.service: "roundcube"
-      traefik.http.routers.roundcube.tls: "true"
-      traefik.http.routers.roundcube.tls.options: "private@file"
-      traefik.http.services.roundcube.loadbalancer.server.port: "80"
+      traefik.http.routers.snappymail.entrypoints: "websecure"
+      traefik.http.routers.snappymail.middlewares: "wg-local-accesslist"
+      traefik.http.routers.snappymail.rule: "Host(`${SNAPPYMAIL_DOMAIN}`)"
+      traefik.http.routers.snappymail.service: "snappymail"
+      traefik.http.routers.snappymail.tls: "true"
+      traefik.http.routers.snappymail.tls.options: "private@file"
+      traefik.http.services.snappymail.loadbalancer.server.port: "8888"
     networks:
       - "infra-1"
     restart: "always"
     volumes:
-      - "./roundcube/config:/var/roundcube/config"
-      - "./roundcube/db:/var/roundcube/db"
+      - "./snappymail:/var/lib/snappymail"
