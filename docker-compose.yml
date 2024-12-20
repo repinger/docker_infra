@@ -22,6 +22,9 @@ include:
   # Reverse proxy
   - path: traefik/docker-compose.yml
 
+  # Monitoring
+  - path: monitoring/docker-compose.yml
+
 networks:
   infra-1:
     name: infra-1

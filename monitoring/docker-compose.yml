@@ -1,0 +1,49 @@
+name: "monitoring"
+
+services:
+  grafana:
+    container_name: "grafana"
+    depends_on:
+      - "traefik"
+    hostname: "grafana"
+    image: "grafana/grafana-oss:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
+      traefik.http.routers.grafana.entrypoints: "websecure"
+      traefik.http.routers.grafana.middlewares: "wg-local-accesslist"
+      traefik.http.routers.grafana.rule: "Host(`${GRAFANA_DOMAIN}`)"
+      traefik.http.routers.grafana.service: "grafana"
+      traefik.http.routers.grafana.tls: "true"
+      traefik.http.routers.grafana.tls.options: "private@file"
+      traefik.http.services.grafana.loadbalancer.server.port: "3000"
+    networks:
+      - "infra-1"
+    restart: "always"
+    user: ${GRAFANA_USER_ID}
+    volumes:
+      - "./grafana:/var/lib/grafana"
+
+  prometheus:
+    container_name: "prometheus"
+    depends_on:
+      - "traefik"
+    hostname: "prometheus"
+    image: "prom/prometheus:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
+      traefik.http.routers.prometheus.entrypoints: "websecure"
+      traefik.http.routers.prometheus.middlewares: "wg-local-accesslist"
+      traefik.http.routers.prometheus.rule: "Host(`${PROMETHEUS_DOMAIN}`)"
+      traefik.http.routers.prometheus.service: "prometheus"
+      traefik.http.routers.prometheus.tls: "true"
+      traefik.http.routers.prometheus.tls.options: "private@file"
+      traefik.http.services.prometheus.loadbalancer.server.port: "9090"
+    networks:
+      - "infra-1"
+    restart: "always"
+    user: ${PROMETHEUS_USER_ID}
+    volumes:
+      - "./prometheus/config:/etc/prometheus"
+      - "./prometheus/data:/prometheus"
