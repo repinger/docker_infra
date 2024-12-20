@@ -25,6 +25,8 @@ include:
 networks:
   infra-1:
     name: infra-1
+    driver_opts:
+      com.docker.network.bridge.name: infra-1
     enable_ipv6: true
     ipam:
       driver: default
@@ -37,6 +39,7 @@ networks:
     driver_opts:
       # No NAT for IPv6
       com.docker.network.bridge.enable_ip_masquerade: "false"
+      com.docker.network.bridge.name: infra_v6-1
     ipam:
       driver: default
       config:
