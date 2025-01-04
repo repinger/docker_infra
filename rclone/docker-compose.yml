@@ -13,7 +13,8 @@ services:
     devices:
       - "/dev/fuse"
     environment:
-      - "PHP_TZ=Asia/Jakarta"
+      - "PHP_TZ=${TZ:-UTC}"
+      - "TZ=${TZ:-UTC}"
     hostname: "rclone"
     image: "rclone/rclone:latest"
     networks:

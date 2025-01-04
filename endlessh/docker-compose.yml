@@ -9,6 +9,8 @@ services:
       - "-v=1"
       - "-log_dir=/logs/"
     container_name: "endlessh"
+    environment:
+      - "TZ=${TZ:-UTC}"
     hostname: "endlessh"
     image: "shizunge/endlessh-go:latest"
     networks:
@@ -20,4 +22,3 @@ services:
     user: ${ENDLESSH_USER_ID}
     volumes:
       - "./logs:/logs"
-      - "/etc/localtime:/etc/localtime:ro"

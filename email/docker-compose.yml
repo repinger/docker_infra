@@ -5,6 +5,8 @@ services:
     container_name: "stalwart-email"
     hostname: "stalwart-email"
     image: "stalwartlabs/mail-server:latest"
+    environment:
+      - "TZ=${TZ:-UTC}"
     labels:
       traefik.enable: "true"
       traefik.http.routers.stalwart.entrypoints: "websecure"
@@ -29,7 +31,6 @@ services:
     restart: "always"
     volumes:
       - "./stalwart:/opt/stalwart-mail"
-      - "/etc/localtime:/etc/localtime:ro"
       - "../acme.sh/certs:/certs:ro"
 
   snappymail:
@@ -53,4 +54,5 @@ services:
       - "infra-1"
     restart: "always"
     volumes:
+      - "/etc/localtime:/etc/localtime:ro"
       - "./snappymail:/var/lib/snappymail"

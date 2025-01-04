@@ -5,6 +5,8 @@ services:
     container_name: "traefik"
     depends_on:
       - "crowdsec"
+    environment:
+      - "TZ=${TZ:-UTC}"
     hostname: "traefik"
     image: "traefik:latest"
     labels:
@@ -34,7 +36,6 @@ services:
       - "${PUBLIC_IP_IPV6}:443:443/udp"
     restart: "always"
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
       - "../acme.sh/certs:/certs:ro"
       - "./config:/etc/traefik:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
