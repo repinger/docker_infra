@@ -1,0 +1,23 @@
+name: "endlessh"
+
+services:
+  endlessh:
+    command:
+      - "-alsologtostderr"
+      - "-enable_prometheus"
+      - "-geoip_supplier=ip-api"
+      - "-v=1"
+      - "-log_dir=/logs/"
+    container_name: "endlessh"
+    hostname: "endlessh"
+    image: "shizunge/endlessh-go:latest"
+    networks:
+      - "infra-1"
+    ports:
+      - "${PUBLIC_IP_IPV4}:22:2222/tcp"
+      - "${PUBLIC_IP_IPV6}:22:2222/tcp"
+    restart: "always"
+    user: ${ENDLESSH_USER_ID}
+    volumes:
+      - "./logs:/logs"
+      - "/etc/localtime:/etc/localtime:ro"

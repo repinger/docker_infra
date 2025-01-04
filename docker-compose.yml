@@ -25,6 +25,9 @@ include:
   # Monitoring
   - path: monitoring/docker-compose.yml
 
+  # SSH tarpit
+  - path: endlessh/docker-compose.yml
+
 networks:
   infra-1:
     name: infra-1

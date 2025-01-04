@@ -4,7 +4,7 @@ services:
   crowdsec:
     container_name: "crowdsec"
     environment:
-      COLLECTIONS: "crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve crowdsecurity/linux crowdsecurity/iptables"
+      COLLECTIONS: "crowdsecurity/endlessh crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve crowdsecurity/linux crowdsecurity/iptables"
     hostname: "crowdsec"
     image: "crowdsecurity/crowdsec:latest"
     networks:
@@ -16,4 +16,5 @@ services:
       - "./data/db:/var/lib/crowdsec/data"
       - "/var/log:/var/log:ro"
       - "../traefik/logs:/logs/traefik:ro"
+      - "../endlessh/logs:/logs/endlessh:ro"
       - "/etc/localtime:/etc/localtime:ro"
