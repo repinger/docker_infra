@@ -11,7 +11,7 @@ services:
       traefik.enable: "true"
       traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
       traefik.http.routers.adguardhome.entrypoints: "websecure"
-      traefik.http.routers.adguardhome.middlewares: "wg-local-accesslist"
+      traefik.http.routers.adguardhome.middlewares: "wg-local-accesslist,authentik-middleware@file"
       traefik.http.routers.adguardhome.rule: "Host(`${ADGUARDHOME_DOMAIN}`)"
       traefik.http.routers.adguardhome.service: "adguardhome"
       traefik.http.routers.adguardhome.tls: "true"

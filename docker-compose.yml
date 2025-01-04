@@ -4,6 +4,9 @@ include:
   # Acme.sh
   - path: acme.sh/docker-compose.yml
 
+  # Authentik
+  - path: authentik/docker-compose.yml
+
   # CrowdSec
   - path: crowdsec/docker-compose.yml
 

@@ -4,6 +4,8 @@ services:
   traefik:
     container_name: "traefik"
     depends_on:
+      - "authentik-server"
+      - "authentik-worker"
       - "crowdsec"
     environment:
       - "TZ=${TZ:-UTC}"
@@ -13,7 +15,7 @@ services:
       traefik.enable: "true"
       traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
       traefik.http.routers.traefik-dashboard.entrypoints: "websecure"
-      traefik.http.routers.traefik-dashboard.middlewares: "wg-local-accesslist"
+      traefik.http.routers.traefik-dashboard.middlewares: "wg-local-accesslist,authentik-middleware@file"
       traefik.http.routers.traefik-dashboard.rule: "Host(`${TRAEFIK_DOMAIN}`)"
       traefik.http.routers.traefik-dashboard.service: "traefik-dashboard"
       traefik.http.routers.traefik-dashboard.tls: "true"

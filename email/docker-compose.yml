@@ -44,7 +44,7 @@ services:
       traefik.enable: "true"
       traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
       traefik.http.routers.snappymail.entrypoints: "websecure"
-      traefik.http.routers.snappymail.middlewares: "wg-local-accesslist"
+      traefik.http.routers.snappymail.middlewares: "wg-local-accesslist,authentik-middleware@file"
       traefik.http.routers.snappymail.rule: "Host(`${SNAPPYMAIL_DOMAIN}`)"
       traefik.http.routers.snappymail.service: "snappymail"
       traefik.http.routers.snappymail.tls: "true"
