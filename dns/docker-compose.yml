@@ -60,6 +60,7 @@ services:
       traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapikey: "${CROWDSEC_LAPI_KEY}"
       traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdsecmode: "stream"
       traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.enabled: "true"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.updateintervalseconds: "10"
 
       traefik.http.middlewares.doh-server-header.headers.customresponseheaders.Cache-Control: "public, max-age=240"
       traefik.http.middlewares.doh-server-header.headers.customresponseheaders.Content-Security-Policy: "default-src 'none'"

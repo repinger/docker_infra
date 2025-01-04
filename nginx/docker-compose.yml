@@ -42,10 +42,13 @@ services:
       traefik.enable: "true"
       traefik.http.middlewares.web-comp.compress: "true"
       traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
+
       traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapihost: "crowdsec:8080"
       traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapikey: "${CROWDSEC_LAPI_KEY}"
       traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdsecmode: "stream"
       traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.enabled: "true"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.updateintervalseconds: "10"
+
       traefik.http.routers.nginx-dns.entrypoints: "websecure"
       traefik.http.routers.nginx-dns.middlewares: "crowdsec-traefik,web-comp"
       traefik.http.routers.nginx-dns.rule: "Host(`doh.repinger.my.id`) || Host(`dns.repinger.my.id`) || Host(`dot.repinger.my.id`)\
