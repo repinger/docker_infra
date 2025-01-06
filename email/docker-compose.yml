@@ -22,11 +22,9 @@ services:
       - "${PUBLIC_IP_IPV4}:25:25"
       - "${PUBLIC_IP_IPV4}:465:465"
       - "${PUBLIC_IP_IPV4}:993:993"
-      - "${PUBLIC_IP_IPV4}:995:995"
       - "${PUBLIC_IP_IPV6}:25:25"
       - "${PUBLIC_IP_IPV6}:465:465"
       - "${PUBLIC_IP_IPV6}:993:993"
-      - "${PUBLIC_IP_IPV6}:995:995"
     restart: "always"
     volumes:
       - "./stalwart:/opt/stalwart-mail"
