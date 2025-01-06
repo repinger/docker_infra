@@ -19,7 +19,6 @@ services:
       traefik.http.routers.traefik-dashboard.rule: "Host(`${TRAEFIK_DOMAIN}`)"
       traefik.http.routers.traefik-dashboard.service: "traefik-dashboard"
       traefik.http.routers.traefik-dashboard.tls: "true"
-      traefik.http.routers.traefik-dashboard.tls.options: "private@file"
       traefik.http.services.traefik-dashboard.loadbalancer.server.port: "8080"
     networks:
       - "infra-1"

@@ -28,7 +28,6 @@ services:
       traefik.http.routers.grafana.rule: "Host(`${GRAFANA_DOMAIN}`)"
       traefik.http.routers.grafana.service: "grafana"
       traefik.http.routers.grafana.tls: "true"
-      traefik.http.routers.grafana.tls.options: "private@file"
       traefik.http.services.grafana.loadbalancer.server.port: "3000"
     networks:
       - "infra-1"
@@ -51,7 +50,6 @@ services:
       traefik.http.routers.prometheus.rule: "Host(`${PROMETHEUS_DOMAIN}`)"
       traefik.http.routers.prometheus.service: "prometheus"
       traefik.http.routers.prometheus.tls: "true"
-      traefik.http.routers.prometheus.tls.options: "private@file"
       traefik.http.services.prometheus.loadbalancer.server.port: "9090"
     networks:
       - "infra-1"

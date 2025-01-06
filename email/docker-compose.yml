@@ -15,7 +15,6 @@ services:
                                           || Host(`${STALWART_DOMAIN}`)"
       traefik.http.routers.stalwart.service: "stalwart"
       traefik.http.routers.stalwart.tls: "true"
-      traefik.http.routers.stalwart.tls.options: "private@file"
       traefik.http.services.stalwart.loadbalancer.server.port: "8080"
     networks:
       - "infra-1"
@@ -48,7 +47,6 @@ services:
       traefik.http.routers.snappymail.rule: "Host(`${SNAPPYMAIL_DOMAIN}`)"
       traefik.http.routers.snappymail.service: "snappymail"
       traefik.http.routers.snappymail.tls: "true"
-      traefik.http.routers.snappymail.tls.options: "private@file"
       traefik.http.services.snappymail.loadbalancer.server.port: "8888"
     networks:
       - "infra-1"

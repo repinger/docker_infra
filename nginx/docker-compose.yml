@@ -22,7 +22,6 @@ services:
                                                   || Host(`mta-sts.repinger.com`) && Path(`/`)"
       traefik.http.routers.nginx-blackhole.service: "nginx-blackhole"
       traefik.http.routers.nginx-blackhole.tls: "true"
-      traefik.http.routers.nginx-blackhole.tls.options: "public@file"
       traefik.http.services.nginx-blackhole.loadbalancer.server.port: "80"
     networks:
       - "infra-1"
@@ -58,7 +57,6 @@ services:
                                             || Host(`doh.repinger.com`) || Host(`dns.repinger.com`) || Host(`dot.repinger.com`)"
       traefik.http.routers.nginx-dns.service: "nginx-dns"
       traefik.http.routers.nginx-dns.tls: "true"
-      traefik.http.routers.nginx-dns.tls.options: "public@file"
       traefik.http.services.nginx-dns.loadbalancer.server.port: "80"
     networks:
       - "infra-1"
@@ -88,7 +86,6 @@ services:
                                               || Host(`file.repinger.my.id`) || Host(`file.repinger.com`)"
       traefik.http.routers.nginx-files.service: "nginx-files"
       traefik.http.routers.nginx-files.tls: "true"
-      traefik.http.routers.nginx-files.tls.options: "public@file"
       traefik.http.services.nginx-files.loadbalancer.server.port: "80"
     networks:
       - "infra-1"
@@ -116,7 +113,6 @@ services:
       traefik.http.routers.nginx-storage.rule: "Host(`storage.repinger.com`) || Host(`dump.repinger.com`)"
       traefik.http.routers.nginx-storage.service: "nginx-storage"
       traefik.http.routers.nginx-storage.tls: "true"
-      traefik.http.routers.nginx-storage.tls.options: "public@file"
       traefik.http.services.nginx-storage.loadbalancer.server.port: "80"
     networks:
       - "infra-1"
@@ -145,7 +141,6 @@ services:
                                             || Host(`repinger.com`) || Host(`www.repinger.com`)"
       traefik.http.routers.nginx-web.service: "nginx-web"
       traefik.http.routers.nginx-web.tls: "true"
-      traefik.http.routers.nginx-web.tls.options: "public@file"
       traefik.http.services.nginx-web.loadbalancer.server.port: "80"
     networks:
       - "infra-1"
