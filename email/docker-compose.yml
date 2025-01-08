@@ -6,7 +6,7 @@ services:
     hostname: "stalwart-email"
     image: "stalwartlabs/mail-server:latest"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     labels:
       traefik.enable: "true"
       traefik.http.routers.stalwart.entrypoints: "websecure"

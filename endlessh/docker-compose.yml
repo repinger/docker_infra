@@ -10,7 +10,7 @@ services:
       - "-log_dir=/logs/"
     container_name: "endlessh"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     hostname: "endlessh"
     image: "shizunge/endlessh-go:latest"
     networks:

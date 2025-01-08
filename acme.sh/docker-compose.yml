@@ -5,7 +5,7 @@ services:
     image: neilpang/acme.sh:latest
     container_name: acme.sh
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     hostname: acme.sh
     volumes:
       - ./data:/acme.sh

@@ -4,7 +4,7 @@ services:
   nginx-blackhole:
     container_name: "nginx-blackhole"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     hostname: "nginx-blackhole"
     depends_on:
       - "traefik"
@@ -34,7 +34,7 @@ services:
   nginx-dns:
     container_name: "nginx-dns"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     hostname: "nginx-dns"
     depends_on:
       - "doh-server"
@@ -69,7 +69,7 @@ services:
   nginx-files:
     container_name: "nginx-files"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     hostname: "nginx-files"
     image: "macbre/nginx-http3:latest"
     depends_on:
@@ -98,7 +98,7 @@ services:
   nginx-storage:
     container_name: "nginx-storage"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     depends_on:
       - "traefik"
     hostname: "nginx-storage"
@@ -125,7 +125,7 @@ services:
   nginx-web:
     container_name: "nginx-web"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     depends_on:
       - "traefik"
     hostname: "nginx-web"

@@ -4,8 +4,8 @@ services:
   crowdsec:
     container_name: "crowdsec"
     environment:
-      - "COLLECTIONS=crowdsecurity/endlessh crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve crowdsecurity/linux crowdsecurity/iptables"
-      - "TZ=${TZ:-UTC}"
+      COLLECTIONS: "crowdsecurity/endlessh crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve crowdsecurity/linux crowdsecurity/iptables"
+      TZ: "${TZ:-UTC}"
     hostname: "crowdsec"
     image: "crowdsecurity/crowdsec:latest"
     networks:

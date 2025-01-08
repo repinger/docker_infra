@@ -4,11 +4,12 @@ services:
   traefik:
     container_name: "traefik"
     depends_on:
+      - "adguardhome"
       - "authentik-server"
       - "authentik-worker"
       - "crowdsec"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     hostname: "traefik"
     image: "traefik:latest"
     labels:

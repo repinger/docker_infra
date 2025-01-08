@@ -6,7 +6,7 @@ services:
     hostname: "adguardhome"
     image: "adguard/adguardhome:latest"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     labels:
       traefik.enable: "true"
       traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
@@ -38,8 +38,8 @@ services:
     hostname: "bind9"
     image: "ubuntu/bind9:latest"
     environment:
-      - "BIND9_USER=root"
-      - "TZ=${TZ:-UTC}"
+      BIND9_USER: "root"
+      TZ: "${TZ:-UTC}"
     networks:
       - "infra-1"
     restart: "always"
@@ -55,7 +55,7 @@ services:
       - "traefik"
     image: "repinger/doh-server:latest"
     environment:
-      - "TZ=${TZ:-UTC}"
+      TZ: "${TZ:-UTC}"
     labels:
       traefik.enable: "true"
       traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapihost: "crowdsec:8080"
