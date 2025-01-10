@@ -2,7 +2,7 @@ name: "authentik"
 
 services:
   authentik-postgres:
-    image: docker.io/library/postgres:alpine
+    image: "postgres:alpine"
     container_name: "authentik-postgres"
     environment:
       POSTGRES_USER: "${AUTHENTIK_POSTGRES_USER:-authentik}"
@@ -23,7 +23,7 @@ services:
     restart: "always"
 
   authentik-redis:
-    image: docker.io/library/redis:alpine
+    image: "redis:alpine"
     container_name: "authentik-redis"
     command: --save 60 1 --loglevel warning
     environment:
@@ -42,7 +42,7 @@ services:
       - ./redis:/data
 
   authentik-server:
-    image: ghcr.io/goauthentik/server:latest
+    image: "beryju/authentik:latest"
     container_name: "authentik-server"
     command: "server"
     depends_on:
@@ -77,7 +77,7 @@ services:
       - "./authentik/templates:/templates"
 
   authentik-worker:
-    image: ghcr.io/goauthentik/server:latest
+    image: "beryju/authentik:latest"
     container_name: "authentik-worker"
     command: "worker"
     depends_on:
