@@ -19,12 +19,12 @@ services:
     networks:
       - "infra-1"
     ports:
-      - "${PUBLIC_IP_IPV4}:25:25"
-      - "${PUBLIC_IP_IPV4}:465:465"
-      - "${PUBLIC_IP_IPV4}:993:993"
-      - "${PUBLIC_IP_IPV6}:25:25"
-      - "${PUBLIC_IP_IPV6}:465:465"
-      - "${PUBLIC_IP_IPV6}:993:993"
+      - "${PUBLIC_IP_IPV4}:25:25/tcp"
+      - "${PUBLIC_IP_IPV4}:465:465/tcp"
+      - "${PUBLIC_IP_IPV4}:993:993/tcp"
+      - "${PUBLIC_IP_IPV6}:25:25/tcp"
+      - "${PUBLIC_IP_IPV6}:465:465/tcp"
+      - "${PUBLIC_IP_IPV6}:993:993/tcp"
     restart: "always"
     volumes:
       - "./stalwart:/opt/stalwart-mail"
@@ -33,8 +33,7 @@ services:
   snappymail:
     container_name: "snappymail"
     depends_on:
-        - "stalwart-email"
-        - "traefik"
+      - "stalwart-email"
     hostname: "snappymail"
     image: "djmaze/snappymail:latest"
     labels:

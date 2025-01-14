@@ -3,6 +3,8 @@ name: "dns"
 services:
   adguardhome:
     container_name: "adguardhome"
+    depends_on:
+      - "bind9"
     hostname: "adguardhome"
     image: "adguard/adguardhome:latest"
     environment:
@@ -52,7 +54,6 @@ services:
     hostname: "doh-server"
     depends_on:
       - "adguardhome"
-      - "traefik"
     image: "repinger/doh-server:latest"
     environment:
       TZ: "${TZ:-UTC}"
