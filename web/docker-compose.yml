@@ -1,0 +1,175 @@
+name: "web"
+
+services:
+  web-blackhole:
+    container_name: "web-blackhole"
+    environment:
+      TZ: "${TZ:-UTC}"
+    hostname: "web-blackhole"
+    image: "macbre/nginx-http3:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.web-comp.compress: "true"
+      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
+      traefik.http.routers.web-blackhole.entrypoints: "websecure"
+      traefik.http.routers.web-blackhole.middlewares: "web-comp"
+      traefik.http.routers.web-blackhole.rule: "Host(`mail.repinger.com`) && Path(`/`)\
+                                                  || Host(`evan.repinger.com`)\
+                                                  || Host(`autodiscover.repinger.com`) && Path(`/`)\
+                                                  || Host(`autoconfig.repinger.com`) && Path(`/`)\
+                                                  || Host(`mta-sts.repinger.com`) && Path(`/`)\
+                                                  || Host(`repinger.my.id`) || Host(`www.repinger.my.id`)\
+                                                  || Host(`www.repinger.com`)"
+      traefik.http.routers.web-blackhole.service: "web-blackhole"
+      traefik.http.routers.web-blackhole.tls: "true"
+      traefik.http.services.web-blackhole.loadbalancer.server.port: "80"
+    networks:
+      - "infra-1"
+    restart: "always"
+    volumes:
+      - "./config/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "./config/conf.d:/etc/nginx/conf.d:ro"
+      - "${WEB_DIR}:/var/www"
+
+  web-dns:
+    container_name: "web-dns"
+    environment:
+      TZ: "${TZ:-UTC}"
+    hostname: "web-dns"
+    image: "repinger/dns-webpage:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.web-comp.compress: "true"
+      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
+
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapihost: "crowdsec:8080"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapikey: "${CROWDSEC_LAPI_KEY}"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdsecmode: "stream"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.enabled: "true"
+      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.updateintervalseconds: "10"
+
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Cache-Control: "public, no-cache"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Content-Security-Policy: "default-src 'none'; style-src 'self'; img-src 'self'"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Permissions-Policy: "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Server: ""
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Strict-Transport-Security: "max-age=63072000; includeSubDomains; preload"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.X-Content-Type-Options: "nosniff"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Referrer-Policy: "no-referrer"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Cross-Origin-Opener-Policy: "same-origin"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Cross-Origin-Embedder-Policy: "require-corp"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Origin-Agent-Cluster: "?1"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.X-Frame-Options: "DENY"
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.X-Powered-By: ""
+      traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.X-Xss-Protection: "0"
+
+      traefik.http.routers.web-dns.entrypoints: "websecure"
+      traefik.http.routers.web-dns.middlewares: "crowdsec-traefik,web-comp,dns-webpage-header"
+      traefik.http.routers.web-dns.rule: "Host(`doh.repinger.my.id`) || Host(`dns.repinger.my.id`) || Host(`dot.repinger.my.id`)\
+                                            || Host(`doh.repinger.com`) || Host(`dns.repinger.com`) || Host(`dot.repinger.com`)"
+      traefik.http.routers.web-dns.service: "web-dns"
+      traefik.http.routers.web-dns.tls: "true"
+      traefik.http.services.web-dns.loadbalancer.server.port: "80"
+    networks:
+      - "infra-1"
+    restart: "always"
+
+  web-files:
+    container_name: "web-files"
+    environment:
+      TZ: "${TZ:-UTC}"
+    hostname: "web-files"
+    image: "macbre/nginx-http3:latest"
+    depends_on:
+      - "php-fpm"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.cf-ips-accesslist.ipallowlist.sourcerange: "173.245.48.0/20, 103.21.244.0/22, 103.22.200.0/22, 103.31.4.0/22, 141.101.64.0/18, 108.162.192.0/18, 190.93.240.0/20, 188.114.96.0/20, 197.234.240.0/22, 198.41.128.0/17, 162.158.0.0/15, 104.16.0.0/13, 104.24.0.0/14, 172.64.0.0/13, 131.0.72.0/22, 2400:cb00::/32, 2606:4700::/32, 2803:f800::/32, 2405:b500::/32, 2405:8100::/32, 2a06:98c0::/29, 2c0f:f248::/32"
+      traefik.http.middlewares.web-comp.compress: "true"
+      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
+      traefik.http.routers.web-files.entrypoints: "websecure"
+      traefik.http.routers.web-files.middlewares: "web-comp,cf-ips-accesslist"
+      traefik.http.routers.web-files.rule: "Host(`files.repinger.my.id`) || Host(`files.repinger.com`)\
+                                              || Host(`file.repinger.my.id`) || Host(`file.repinger.com`)"
+      traefik.http.routers.web-files.service: "web-files"
+      traefik.http.routers.web-files.tls: "true"
+      traefik.http.services.web-files.loadbalancer.server.port: "80"
+    networks:
+      - "infra-1"
+    restart: "always"
+    volumes:
+      - "./config/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "./config/conf.d:/etc/nginx/conf.d:ro"
+      - "${WEB_DIR}:/var/www"
+
+  web-storage:
+    container_name: "web-storage"
+    environment:
+      TZ: "${TZ:-UTC}"
+    hostname: "web-storage"
+    image: "macbre/nginx-http3:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.cf-ips-accesslist.ipallowlist.sourcerange: "173.245.48.0/20, 103.21.244.0/22, 103.22.200.0/22, 103.31.4.0/22, 141.101.64.0/18, 108.162.192.0/18, 190.93.240.0/20, 188.114.96.0/20, 197.234.240.0/22, 198.41.128.0/17, 162.158.0.0/15, 104.16.0.0/13, 104.24.0.0/14, 172.64.0.0/13, 131.0.72.0/22, 2400:cb00::/32, 2606:4700::/32, 2803:f800::/32, 2405:b500::/32, 2405:8100::/32, 2a06:98c0::/29, 2c0f:f248::/32"
+      traefik.http.middlewares.web-comp.compress: "true"
+      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
+      traefik.http.routers.web-storage.entrypoints: "websecure"
+      traefik.http.routers.web-storage.middlewares: "cf-ips-accesslist"
+      traefik.http.routers.web-storage.rule: "Host(`storage.repinger.com`) || Host(`dump.repinger.com`)"
+      traefik.http.routers.web-storage.service: "web-storage"
+      traefik.http.routers.web-storage.tls: "true"
+      traefik.http.services.web-storage.loadbalancer.server.port: "80"
+    networks:
+      - "infra-1"
+    restart: "always"
+    volumes:
+      - "./config/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "./config/conf.d:/etc/nginx/conf.d:ro"
+      - "${WEB_DIR}:/var/www"
+
+  web-main:
+    container_name: "web-main"
+    environment:
+      TZ: "${TZ:-UTC}"
+    hostname: "web-main"
+    image: "repinger/main-webpage:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.middlewares.cf-ips-accesslist.ipallowlist.sourcerange: "173.245.48.0/20, 103.21.244.0/22, 103.22.200.0/22, 103.31.4.0/22, 141.101.64.0/18, 108.162.192.0/18, 190.93.240.0/20, 188.114.96.0/20, 197.234.240.0/22, 198.41.128.0/17, 162.158.0.0/15, 104.16.0.0/13, 104.24.0.0/14, 172.64.0.0/13, 131.0.72.0/22, 2400:cb00::/32, 2606:4700::/32, 2803:f800::/32, 2405:b500::/32, 2405:8100::/32, 2a06:98c0::/29, 2c0f:f248::/32"
+
+      traefik.http.middlewares.web-comp.compress: "true"
+      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
+
+      traefik.http.routers.web-main.entrypoints: "websecure"
+      traefik.http.routers.web-main.middlewares: "web-comp,cf-ips-accesslist,main-webpage-header"
+      traefik.http.routers.web-main.rule: "Host(`repinger.com`)"
+      traefik.http.routers.web-main.service: "web-main"
+      traefik.http.routers.web-main.tls: "true"
+      traefik.http.services.web-main.loadbalancer.server.port: "80"
+
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Cache-Control: "public, no-cache"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Content-Security-Policy: "default-src 'none'; style-src 'self'; font-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; img-src 'self'; connect-src 'self'"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Permissions-Policy: "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Server: ""
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Strict-Transport-Security: "max-age=63072000; includeSubDomains; preload"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.X-Content-Type-Options: "nosniff"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Referrer-Policy: "no-referrer"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Cross-Origin-Opener-Policy: "same-origin"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Cross-Origin-Embedder-Policy: "require-corp"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Origin-Agent-Cluster: "?1"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.X-Frame-Options: "DENY"
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.X-Powered-By: ""
+      traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.X-Xss-Protection: "0"
+    networks:
+      - "infra-1"
+    restart: "always"
+
+  php-fpm:
+    container_name: "php-fpm"
+    hostname: "php-fpm"
+    image: "php:8.1-fpm-alpine"
+    networks:
+      - "infra-1"
+    restart: "always"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "${WEB_DIR}:/var/www"

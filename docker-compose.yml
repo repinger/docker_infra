@@ -16,9 +16,6 @@ include:
   # E-mail service
   - path: email/docker-compose.yml
 
-  # Web service
-  - path: nginx/docker-compose.yml
-
   # Rsync backup
   - path: rclone/docker-compose.yml
 
@@ -30,6 +27,9 @@ include:
 
   # SSH tarpit
   - path: endlessh/docker-compose.yml
+
+  # Web service
+  - path: web/docker-compose.yml
 
 networks:
   infra-1:
