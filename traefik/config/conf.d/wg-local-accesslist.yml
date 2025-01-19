@@ -1,0 +1,7 @@
+http:
+  middlewares:
+    wg-local-accesslist:
+      ipAllowList:
+        sourceRange:
+          - "{{ env "PRIVATE_IPV4_RANGE" }}"
+          - "{{ env "PRIVATE_IPV6_RANGE" }}"

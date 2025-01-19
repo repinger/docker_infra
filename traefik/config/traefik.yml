@@ -1,0 +1,51 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false  # true by default
+
+log:
+  level: INFO
+  filePath: "/var/log/traefik/traefik.log"
+
+accesslog:
+  filePath: "/var/log/traefik/access.log"
+  fields:
+    names:
+      StartUTC: drop
+
+experimental:
+  plugins:
+    crowdsec-bouncer:
+      moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+      version: "v1.3.5"
+
+# (Optional) Enable API and Dashboard
+# ---
+api:
+ dashboard: true  # true by default
+ insecure: true  # Don't do this in production!
+
+# Entry Points configuration
+# ---
+entryPoints:
+  web:
+    address: :80
+    # (Optional) Redirect to HTTPS
+    # ---
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: :443
+    http3:
+      advertisedPort: 443
+
+providers:
+  docker:
+    exposedByDefault: false  # Default is true
+  file:
+    # watch for dynamic configuration changes
+    directory: /etc/traefik
+    watch: false

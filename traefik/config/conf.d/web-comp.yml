@@ -1,0 +1,5 @@
+http:
+  middlewares:
+    web-comp:
+      compress:
+        defaultEncoding: "br"
