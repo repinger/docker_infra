@@ -22,9 +22,8 @@ services:
     image: "grafana/grafana-oss:latest"
     labels:
       traefik.enable: "true"
-      traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
       traefik.http.routers.grafana.entrypoints: "websecure"
-      traefik.http.routers.grafana.middlewares: "wg-local-accesslist"
+      traefik.http.routers.grafana.middlewares: "wg-local-accesslist@file"
       traefik.http.routers.grafana.rule: "Host(`${GRAFANA_DOMAIN}`)"
       traefik.http.routers.grafana.service: "grafana"
       traefik.http.routers.grafana.tls: "true"
@@ -42,9 +41,8 @@ services:
     image: "prom/prometheus:latest"
     labels:
       traefik.enable: "true"
-      traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
       traefik.http.routers.prometheus.entrypoints: "websecure"
-      traefik.http.routers.prometheus.middlewares: "wg-local-accesslist,authentik-middleware@file"
+      traefik.http.routers.prometheus.middlewares: "wg-local-accesslist@file,authentik@file"
       traefik.http.routers.prometheus.rule: "Host(`${PROMETHEUS_DOMAIN}`)"
       traefik.http.routers.prometheus.service: "prometheus"
       traefik.http.routers.prometheus.tls: "true"

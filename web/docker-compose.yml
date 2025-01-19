@@ -9,10 +9,8 @@ services:
     image: "macbre/nginx-http3:latest"
     labels:
       traefik.enable: "true"
-      traefik.http.middlewares.web-comp.compress: "true"
-      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
       traefik.http.routers.web-blackhole.entrypoints: "websecure"
-      traefik.http.routers.web-blackhole.middlewares: "web-comp"
+      traefik.http.routers.web-blackhole.middlewares: "web-comp@file"
       traefik.http.routers.web-blackhole.rule: "Host(`mail.repinger.com`) && Path(`/`)\
                                                   || Host(`evan.repinger.com`)\
                                                   || Host(`autodiscover.repinger.com`) && Path(`/`)\
@@ -39,14 +37,6 @@ services:
     image: "repinger/dns-webpage:latest"
     labels:
       traefik.enable: "true"
-      traefik.http.middlewares.web-comp.compress: "true"
-      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
-
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapihost: "crowdsec:8080"
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapikey: "${CROWDSEC_LAPI_KEY}"
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdsecmode: "stream"
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.enabled: "true"
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.updateintervalseconds: "10"
 
       traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Cache-Control: "public, no-cache"
       traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.Content-Security-Policy: "default-src 'none'; style-src 'self'; img-src 'self'"
@@ -63,7 +53,7 @@ services:
       traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.X-Xss-Protection: "0"
 
       traefik.http.routers.web-dns.entrypoints: "websecure"
-      traefik.http.routers.web-dns.middlewares: "crowdsec-traefik,web-comp,dns-webpage-header"
+      traefik.http.routers.web-dns.middlewares: "crowdsec-traefik@file,web-comp@file,dns-webpage-header"
       traefik.http.routers.web-dns.rule: "Host(`doh.repinger.my.id`) || Host(`dns.repinger.my.id`) || Host(`dot.repinger.my.id`)\
                                             || Host(`doh.repinger.com`) || Host(`dns.repinger.com`) || Host(`dot.repinger.com`)"
       traefik.http.routers.web-dns.service: "web-dns"
@@ -83,11 +73,8 @@ services:
       - "php-fpm"
     labels:
       traefik.enable: "true"
-      traefik.http.middlewares.cf-ips-accesslist.ipallowlist.sourcerange: "173.245.48.0/20, 103.21.244.0/22, 103.22.200.0/22, 103.31.4.0/22, 141.101.64.0/18, 108.162.192.0/18, 190.93.240.0/20, 188.114.96.0/20, 197.234.240.0/22, 198.41.128.0/17, 162.158.0.0/15, 104.16.0.0/13, 104.24.0.0/14, 172.64.0.0/13, 131.0.72.0/22, 2400:cb00::/32, 2606:4700::/32, 2803:f800::/32, 2405:b500::/32, 2405:8100::/32, 2a06:98c0::/29, 2c0f:f248::/32"
-      traefik.http.middlewares.web-comp.compress: "true"
-      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
       traefik.http.routers.web-files.entrypoints: "websecure"
-      traefik.http.routers.web-files.middlewares: "web-comp,cf-ips-accesslist"
+      traefik.http.routers.web-files.middlewares: "web-comp@file,cf-ips-accesslist@file"
       traefik.http.routers.web-files.rule: "Host(`files.repinger.my.id`) || Host(`files.repinger.com`)\
                                               || Host(`file.repinger.my.id`) || Host(`file.repinger.com`)"
       traefik.http.routers.web-files.service: "web-files"
@@ -109,11 +96,8 @@ services:
     image: "macbre/nginx-http3:latest"
     labels:
       traefik.enable: "true"
-      traefik.http.middlewares.cf-ips-accesslist.ipallowlist.sourcerange: "173.245.48.0/20, 103.21.244.0/22, 103.22.200.0/22, 103.31.4.0/22, 141.101.64.0/18, 108.162.192.0/18, 190.93.240.0/20, 188.114.96.0/20, 197.234.240.0/22, 198.41.128.0/17, 162.158.0.0/15, 104.16.0.0/13, 104.24.0.0/14, 172.64.0.0/13, 131.0.72.0/22, 2400:cb00::/32, 2606:4700::/32, 2803:f800::/32, 2405:b500::/32, 2405:8100::/32, 2a06:98c0::/29, 2c0f:f248::/32"
-      traefik.http.middlewares.web-comp.compress: "true"
-      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
       traefik.http.routers.web-storage.entrypoints: "websecure"
-      traefik.http.routers.web-storage.middlewares: "cf-ips-accesslist"
+      traefik.http.routers.web-storage.middlewares: "web-comp@file,cf-ips-accesslist@file"
       traefik.http.routers.web-storage.rule: "Host(`storage.repinger.com`) || Host(`dump.repinger.com`)"
       traefik.http.routers.web-storage.service: "web-storage"
       traefik.http.routers.web-storage.tls: "true"
@@ -134,13 +118,9 @@ services:
     image: "repinger/main-webpage:latest"
     labels:
       traefik.enable: "true"
-      traefik.http.middlewares.cf-ips-accesslist.ipallowlist.sourcerange: "173.245.48.0/20, 103.21.244.0/22, 103.22.200.0/22, 103.31.4.0/22, 141.101.64.0/18, 108.162.192.0/18, 190.93.240.0/20, 188.114.96.0/20, 197.234.240.0/22, 198.41.128.0/17, 162.158.0.0/15, 104.16.0.0/13, 104.24.0.0/14, 172.64.0.0/13, 131.0.72.0/22, 2400:cb00::/32, 2606:4700::/32, 2803:f800::/32, 2405:b500::/32, 2405:8100::/32, 2a06:98c0::/29, 2c0f:f248::/32"
-
-      traefik.http.middlewares.web-comp.compress: "true"
-      traefik.http.middlewares.web-comp.compress.defaultEncoding: "br"
 
       traefik.http.routers.web-main.entrypoints: "websecure"
-      traefik.http.routers.web-main.middlewares: "web-comp,cf-ips-accesslist,main-webpage-header"
+      traefik.http.routers.web-main.middlewares: "web-comp@file,main-webpage-header,cf-ips-accesslist@file"
       traefik.http.routers.web-main.rule: "Host(`repinger.com`)"
       traefik.http.routers.web-main.service: "web-main"
       traefik.http.routers.web-main.tls: "true"

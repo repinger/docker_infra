@@ -11,9 +11,8 @@ services:
       TZ: "${TZ:-UTC}"
     labels:
       traefik.enable: "true"
-      traefik.http.middlewares.wg-local-accesslist.ipallowlist.sourcerange: "${PRIVATE_IPV4_SUBNET}, ${PRIVATE_IPV6_SUBNET}"
       traefik.http.routers.adguardhome.entrypoints: "websecure"
-      traefik.http.routers.adguardhome.middlewares: "wg-local-accesslist,authentik-middleware@file"
+      traefik.http.routers.adguardhome.middlewares: "wg-local-accesslist@file,authentik@file"
       traefik.http.routers.adguardhome.rule: "Host(`${ADGUARDHOME_DOMAIN}`)"
       traefik.http.routers.adguardhome.service: "adguardhome"
       traefik.http.routers.adguardhome.tls: "true"
@@ -59,11 +58,6 @@ services:
       TZ: "${TZ:-UTC}"
     labels:
       traefik.enable: "true"
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapihost: "crowdsec:8080"
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdseclapikey: "${CROWDSEC_LAPI_KEY}"
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.crowdsecmode: "stream"
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.enabled: "true"
-      traefik.http.middlewares.crowdsec-traefik.plugin.crowdsec-bouncer.updateintervalseconds: "10"
 
       traefik.http.middlewares.doh-server-header.headers.customresponseheaders.Cache-Control: "public, max-age=240"
       traefik.http.middlewares.doh-server-header.headers.customresponseheaders.Content-Security-Policy: "default-src 'none'"
@@ -76,7 +70,7 @@ services:
       traefik.http.middlewares.doh-server-header.headers.customresponseheaders.X-Xss-Protection: "0"
 
       traefik.http.routers.doh-server.entrypoints: "websecure"
-      traefik.http.routers.doh-server.middlewares: "crowdsec-traefik,doh-server-header"
+      traefik.http.routers.doh-server.middlewares: "crowdsec-traefik@file,doh-server-header"
       traefik.http.routers.doh-server.rule: "Host(`doh.repinger.my.id`) && PathPrefix(`/dns-query`) || Host(`dns.repinger.my.id`)\
                                             && PathPrefix(`/dns-query`) || Host(`dot.repinger.my.id`) && PathPrefix(`/dns-query`)\
                                             || Host(`doh.repinger.com`) && PathPrefix(`/dns-query`) || Host(`dns.repinger.com`)\
