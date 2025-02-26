@@ -28,6 +28,10 @@ services:
       - "${PRIVATE_IPV6}:53:53/udp"
       - "${PUBLIC_IP_IPV6}:853:853/tcp"
       - "${PUBLIC_IP_IPV6}:853:853/udp"
+      - "127.0.0.1:53:53/tcp"
+      - "127.0.0.1:53:53/udp"
+      - "[::1]:53:53/tcp"
+      - "[::1]:53:53/udp"
     restart: "always"
     volumes:
       - "./adguardhome/conf:/opt/adguardhome/conf"
