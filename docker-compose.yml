@@ -4,9 +4,6 @@ include:
   # Acme.sh
   - path: acme.sh/docker-compose.yml
 
-  # Authentik
-  - path: authentik/docker-compose.yml
-
   # CrowdSec
   - path: crowdsec/docker-compose.yml
 
@@ -15,6 +12,9 @@ include:
 
   # E-mail service
   - path: email/docker-compose.yml
+
+  # Pocket-ID
+  - path: pocket-id/docker-compose.yml
 
   # Rsync backup
   - path: rclone/docker-compose.yml
