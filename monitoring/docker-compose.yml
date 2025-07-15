@@ -5,6 +5,7 @@ services:
     container_name: "grafana"
     depends_on:
       - "endlessh"
+      - "prometheus"
     environment:
       GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP: "true"
       GF_AUTH_GENERIC_OAUTH_API_URL: "https://${POCKET_ID_DOMAIN}/api/oidc/userinfo"
