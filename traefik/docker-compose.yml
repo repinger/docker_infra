@@ -5,8 +5,6 @@ services:
     container_name: "traefik"
     depends_on:
       - "adguardhome"
-      - "authentik-server"
-      - "authentik-worker"
       - "crowdsec"
       - "doh-server"
       - "grafana"
@@ -15,16 +13,23 @@ services:
       - "web-files"
       - "web-main"
       - "web-storage"
+      - "pocket-id"
       - "prometheus"
       - "stalwart-email"
     environment:
       CROWDSEC_LAPI_KEY: "${TRAEFIK_CROWDSEC_LAPI_KEY}"
+
+      OIDC_SECRET: "${TRAEFIK_OIDC_SECRET}"
 
       PRIVATE_CERT_FILE: "${TRAEFIK_PRIVATE_CERT_FILE}"
       PRIVATE_CERT_KEY: "${TRAEFIK_PRIVATE_CERT_KEY}"
 
       PRIVATE_IPV4_RANGE: "${PRIVATE_IPV4_SUBNET}"
       PRIVATE_IPV6_RANGE: ${PRIVATE_IPV6_SUBNET}
+
+      POCKETID_OIDC_AUTH_URL: "${POCKET_ID_DOMAIN}"
+      POCKETID_OIDC_AUTH_CLIENT_ID: "${TRAEFIK_POCKET_ID_CID}"
+      POCKETID_OIDC_AUTH_CLIENT_SECRET: "${TRAEFIK_POCKET_ID_SECRET}"
 
       PUBLIC_CERT_FILE: "${TRAEFIK_PUBLIC_CERT_FILE}"
       PUBLIC_CERT_KEY: "${TRAEFIK_PUBLIC_CERT_KEY}"
@@ -35,7 +40,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.traefik-dashboard.entrypoints: "websecure"
-      traefik.http.routers.traefik-dashboard.middlewares: "wg-local-accesslist@file,authentik@file"
+      traefik.http.routers.traefik-dashboard.middlewares: "wg-local-accesslist@file,pocketid-oidc-auth@file"
       traefik.http.routers.traefik-dashboard.rule: "Host(`${TRAEFIK_DOMAIN}`)"
       traefik.http.routers.traefik-dashboard.service: "traefik-dashboard"
       traefik.http.routers.traefik-dashboard.tls: "true"

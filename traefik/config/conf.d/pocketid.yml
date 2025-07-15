@@ -1,0 +1,11 @@
+http:
+  middlewares:
+    pocketid-oidc-auth:
+      plugin:
+        traefik-oidc-auth:
+          Secret: "{{ env "OIDC_SECRET" }}"
+          Provider:
+            Url: "{{ env "POCKETID_OIDC_AUTH_URL" }}"
+            ClientId: "{{ env "POCKETID_OIDC_AUTH_CLIENT_ID" }}"
+            ClientSecret: "{{ env "POCKETID_OIDC_AUTH_CLIENT_SECRET" }}"
+            UsePkce: true

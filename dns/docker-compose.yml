@@ -12,7 +12,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.adguardhome.entrypoints: "websecure"
-      traefik.http.routers.adguardhome.middlewares: "wg-local-accesslist@file,authentik@file"
+      traefik.http.routers.adguardhome.middlewares: "wg-local-accesslist@file,pocketid-oidc-auth@file"
       traefik.http.routers.adguardhome.rule: "Host(`${ADGUARDHOME_DOMAIN}`)"
       traefik.http.routers.adguardhome.service: "adguardhome"
       traefik.http.routers.adguardhome.tls: "true"
