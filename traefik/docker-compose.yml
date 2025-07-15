@@ -16,7 +16,6 @@ services:
       - "web-main"
       - "web-storage"
       - "prometheus"
-      - "snappymail"
       - "stalwart-email"
     environment:
       CROWDSEC_LAPI_KEY: "${TRAEFIK_CROWDSEC_LAPI_KEY}"
