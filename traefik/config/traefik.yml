@@ -4,7 +4,6 @@ global:
 
 log:
   level: INFO
-  filePath: "/var/log/traefik/traefik.log"
 
 accesslog:
   filePath: "/var/log/traefik/access.log"
