@@ -4,18 +4,30 @@ services:
   traefik:
     container_name: "traefik"
     depends_on:
-      - "adguardhome"
-      - "crowdsec"
-      - "doh-server"
-      - "grafana"
-      - "web-blackhole"
-      - "web-dns"
-      - "web-files"
-      - "web-main"
-      - "web-storage"
-      - "pocket-id"
-      - "prometheus"
-      - "stalwart-email"
+      adguardhome:
+        condition: service_healthy
+      crowdsec:
+        condition: service_started
+      doh-server:
+        condition: service_started
+      grafana:
+        condition: service_started
+      web-blackhole:
+        condition: service_started
+      web-dns:
+        condition: service_started
+      web-files:
+        condition: service_started
+      web-main:
+        condition: service_started
+      web-storage:
+        condition: service_started
+      pocket-id:
+        condition: service_healthy
+      prometheus:
+        condition: service_started
+      stalwart-email:
+        condition: service_started
     environment:
       CROWDSEC_LAPI_KEY: "${TRAEFIK_CROWDSEC_LAPI_KEY}"
 
