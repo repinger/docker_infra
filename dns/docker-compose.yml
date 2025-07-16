@@ -5,10 +5,16 @@ services:
     container_name: "adguardhome"
     depends_on:
       - "bind9"
-    hostname: "adguardhome"
-    image: "adguard/adguardhome:latest"
     environment:
       TZ: "${TZ:-UTC}"
+    healthcheck:
+      test: ["CMD", "nslookup", "${ADGUARDHOME_DOMAIN}", "::1"]
+      interval: 10s
+      timeout: 4s
+      retries: 3
+      start_period: 7s
+    hostname: "adguardhome"
+    image: "adguard/adguardhome:latest"
     labels:
       traefik.enable: "true"
       traefik.http.routers.adguardhome.entrypoints: "websecure"
@@ -56,7 +62,8 @@ services:
     container_name: "doh-server"
     hostname: "doh-server"
     depends_on:
-      - "adguardhome"
+      adguardhome:
+        condition: service_healthy
     image: "repinger/doh-server:latest"
     environment:
       TZ: "${TZ:-UTC}"
