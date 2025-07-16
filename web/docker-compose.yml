@@ -11,13 +11,19 @@ services:
       traefik.enable: "true"
       traefik.http.routers.web-blackhole.entrypoints: "websecure"
       traefik.http.routers.web-blackhole.middlewares: "web-comp@file"
-      traefik.http.routers.web-blackhole.rule: "Host(`mail.repinger.com`) && Path(`/`)\
-                                                  || Host(`evan.repinger.com`)\
-                                                  || Host(`autodiscover.repinger.com`) && Path(`/`)\
-                                                  || Host(`autoconfig.repinger.com`) && Path(`/`)\
-                                                  || Host(`mta-sts.repinger.com`) && Path(`/`)\
-                                                  || Host(`repinger.my.id`) || Host(`www.repinger.my.id`)\
-                                                  || Host(`www.repinger.com`)"
+      traefik.http.routers.web-blackhole.rule: "(
+        Host(`mail.repinger.com`) && (Path(`/`) || Path(`/login`)) ||
+        Host(`evan.repinger.com`) ||
+        Host(`autodiscover.repinger.com`) && Path(`/`) ||
+        Host(`autoconfig.repinger.com`) && Path(`/`) ||
+        Host(`mta-sts.repinger.com`) && Path(`/`) ||
+        Host(`repinger.my.id`) ||
+        Host(`www.repinger.my.id`) ||
+        Host(`www.repinger.com`) ||
+        Host(`dns.repinger.my.id`) && !Path(`/dns-query`) ||
+        Host(`doh.repinger.my.id`) && !Path(`/dns-query`) ||
+        Host(`dot.repinger.my.id`) && !Path(`/dns-query`)
+      )"
       traefik.http.routers.web-blackhole.service: "web-blackhole"
       traefik.http.routers.web-blackhole.tls: "true"
       traefik.http.services.web-blackhole.loadbalancer.server.port: "80"
@@ -54,8 +60,11 @@ services:
 
       traefik.http.routers.web-dns.entrypoints: "websecure"
       traefik.http.routers.web-dns.middlewares: "crowdsec-traefik@file,web-comp@file,dns-webpage-header"
-      traefik.http.routers.web-dns.rule: "Host(`doh.repinger.my.id`) || Host(`dns.repinger.my.id`) || Host(`dot.repinger.my.id`)\
-                                            || Host(`doh.repinger.com`) || Host(`dns.repinger.com`) || Host(`dot.repinger.com`)"
+      traefik.http.routers.web-dns.rule: "(
+        Host(`doh.repinger.com`) ||
+        Host(`dns.repinger.com`) || 
+        Host(`dot.repinger.com`)
+      )"
       traefik.http.routers.web-dns.service: "web-dns"
       traefik.http.routers.web-dns.tls: "true"
       traefik.http.services.web-dns.loadbalancer.server.port: "80"
@@ -75,8 +84,12 @@ services:
       traefik.enable: "true"
       traefik.http.routers.web-files.entrypoints: "websecure"
       traefik.http.routers.web-files.middlewares: "web-comp@file,cf-ips-accesslist@file"
-      traefik.http.routers.web-files.rule: "Host(`files.repinger.my.id`) || Host(`files.repinger.com`)\
-                                              || Host(`file.repinger.my.id`) || Host(`file.repinger.com`)"
+      traefik.http.routers.web-files.rule: "(
+        Host(`files.repinger.my.id`) || 
+        Host(`files.repinger.com`) || 
+        Host(`file.repinger.my.id`) || 
+        Host(`file.repinger.com`)
+      )"
       traefik.http.routers.web-files.service: "web-files"
       traefik.http.routers.web-files.tls: "true"
       traefik.http.services.web-files.loadbalancer.server.port: "80"

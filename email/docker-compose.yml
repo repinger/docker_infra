@@ -10,9 +10,13 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.stalwart.entrypoints: "websecure"
-      traefik.http.routers.stalwart.rule: "Host(`autodiscover.repinger.com`)\
-                                          || Host(`autoconfig.repinger.com`) || Host(`mta-sts.repinger.com`)\
-                                          || Host(`${STALWART_DOMAIN}`)"
+      traefik.http.routers.stalwart.rule: "(
+        Host(`autodiscover.repinger.com`) || 
+        Host(`autoconfig.repinger.com`) || 
+        Host(`mta-sts.repinger.com`) || 
+        Host(`${STALWART_DOMAIN}`) || 
+        Host(`mail.repinger.com`)
+      )"
       traefik.http.routers.stalwart.service: "stalwart"
       traefik.http.routers.stalwart.tls: "true"
       traefik.http.services.stalwart.loadbalancer.server.port: "8080"

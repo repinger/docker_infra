@@ -75,10 +75,14 @@ services:
 
       traefik.http.routers.doh-server.entrypoints: "websecure"
       traefik.http.routers.doh-server.middlewares: "crowdsec-traefik@file,doh-server-header"
-      traefik.http.routers.doh-server.rule: "Host(`doh.repinger.my.id`) && PathPrefix(`/dns-query`) || Host(`dns.repinger.my.id`)\
-                                            && PathPrefix(`/dns-query`) || Host(`dot.repinger.my.id`) && PathPrefix(`/dns-query`)\
-                                            || Host(`doh.repinger.com`) && PathPrefix(`/dns-query`) || Host(`dns.repinger.com`)\
-                                            && PathPrefix(`/dns-query`) || Host(`dot.repinger.com`) && PathPrefix(`/dns-query`)"
+      traefik.http.routers.doh-server.rule: "(
+        Host(`doh.repinger.my.id`) || 
+        Host(`dns.repinger.my.id`) || 
+        Host(`dot.repinger.my.id`) || 
+        Host(`doh.repinger.com`) || 
+        Host(`dns.repinger.com`) || 
+        Host(`dot.repinger.com`)
+      ) && PathPrefix(`/dns-query`)"
       traefik.http.routers.doh-server.service: "doh-server"
       traefik.http.routers.doh-server.tls: "true"
       traefik.http.services.doh-server.loadbalancer.server.port: "3000"
