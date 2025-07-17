@@ -60,10 +60,16 @@ services:
 
   doh-server:
     container_name: "doh-server"
-    hostname: "doh-server"
     depends_on:
       adguardhome:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-s", "-H", "accept: application/dns-json", "http://localhost:3000/dns-query?name=${ADGUARDHOME_DOMAIN}"]
+      interval: 10s
+      timeout: 4s
+      retries: 3
+      start_period: 15s
+    hostname: "doh-server"
     image: "repinger/doh-server:latest"
     environment:
       TZ: "${TZ:-UTC}"

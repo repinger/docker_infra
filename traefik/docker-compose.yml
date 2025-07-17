@@ -11,7 +11,7 @@ services:
       crowdsec:
         condition: service_started
       doh-server:
-        condition: service_started
+        condition: service_healthy
       grafana:
         condition: service_started
       web-blackhole:
