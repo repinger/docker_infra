@@ -162,6 +162,7 @@ services:
     networks:
       - "infra-1"
     restart: "always"
+    user: "${USER_ID}:${GROUP_ID}"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "${WEB_DIR}:/var/www"
