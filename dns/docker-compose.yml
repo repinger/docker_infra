@@ -49,7 +49,7 @@ services:
     hostname: "bind9"
     image: "ubuntu/bind9:latest"
     environment:
-      BIND9_USER: "root"
+      BIND9_USER: "${BIND_USER_ID}"
       TZ: "${TZ:-UTC}"
     networks:
       - "infra-1"
