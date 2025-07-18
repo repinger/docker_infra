@@ -87,7 +87,6 @@ services:
       BIND: ":8080"
       COOKIE_EXPIRATION_TIME: "8h"
       ED25519_PRIVATE_KEY_HEX: "${ANUBIS_PRIVATE_KEY}"
-      SERVE_ROBOTS_TXT: "true"
       TARGET: "http://traefik:3923"
       TZ: "${TZ:-UTC}"
       WEBMASTER_EMAIL: ${ANUBIS_WEBMASTER_EMAIL}
