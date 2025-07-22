@@ -1,7 +1,7 @@
 :80 {
 	file_server {
 		root /var/www/file
-		browse
+		browse /etc/caddy/browse.html
 		hide .*
 	}
 
