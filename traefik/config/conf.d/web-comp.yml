@@ -2,4 +2,6 @@ http:
   middlewares:
     web-comp:
       compress:
-        defaultEncoding: "br"
+        encodings:
+          - zstd
+          - br
