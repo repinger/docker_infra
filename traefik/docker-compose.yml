@@ -13,7 +13,7 @@ services:
       doh-server:
         condition: service_healthy
       grafana:
-        condition: service_started
+        condition: service_healthy
       web-blackhole:
         condition: service_started
       web-dns:
@@ -27,7 +27,7 @@ services:
       pocket-id:
         condition: service_healthy
       prometheus:
-        condition: service_started
+        condition: service_healthy
       stalwart-email:
         condition: service_started
     environment:
