@@ -49,6 +49,12 @@ services:
       PUBLIC_CERT_KEY: "${TRAEFIK_PUBLIC_CERT_KEY}"
 
       TZ: "${TZ:-UTC}"
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 15s
     hostname: "traefik"
     image: "traefik:latest"
     labels:

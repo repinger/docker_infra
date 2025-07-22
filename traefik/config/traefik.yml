@@ -54,3 +54,5 @@ providers:
     # watch for dynamic configuration changes
     directory: /etc/traefik
     watch: false
+
+ping: {}
