@@ -19,6 +19,6 @@ services:
       - "${PUBLIC_IP_IPV4}:22:2222/tcp"
       - "${PUBLIC_IP_IPV6}:22:2222/tcp"
     restart: "always"
-    user: ${ENDLESSH_USER_ID}
+    user: "${USER_ID}:${GROUP_ID}"
     volumes:
       - "./logs:/logs"

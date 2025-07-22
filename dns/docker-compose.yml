@@ -39,6 +39,7 @@ services:
       - "[::1]:53:53/tcp"
       - "[::1]:53:53/udp"
     restart: "always"
+    user: "${USER_ID}:${GROUP_ID}"
     volumes:
       - "./adguardhome/conf:/opt/adguardhome/conf"
       - "./adguardhome/work:/opt/adguardhome/work"
@@ -49,11 +50,12 @@ services:
     hostname: "bind9"
     image: "ubuntu/bind9:latest"
     environment:
-      BIND9_USER: "${BIND_USER_ID}"
+      BIND9_USER: "${USER_ID}"
       TZ: "${TZ:-UTC}"
     networks:
       - "infra-1"
     restart: "always"
+    user: "${USER_ID}:${GROUP_ID}"
     volumes:
       - "./bind9/config:/etc/bind:ro"
       - "./bind9/cache:/var/cache/bind"
@@ -102,3 +104,4 @@ services:
     networks:
       - "infra-1"
     restart: "always"
+    user: "${USER_ID}:${GROUP_ID}"

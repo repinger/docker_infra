@@ -12,6 +12,7 @@ services:
       infra-1:
         ipv4_address: "${CROWDSEC_IP_ADDR}"
     restart: "always"
+    user: "${USER_ID}:${GROUP_ID}"
     volumes:
       - "./data/config:/etc/crowdsec"
       - "./data/db:/var/lib/crowdsec/data"

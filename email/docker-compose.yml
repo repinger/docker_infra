@@ -30,6 +30,7 @@ services:
       - "${PUBLIC_IP_IPV6}:465:465/tcp"
       - "${PUBLIC_IP_IPV6}:993:993/tcp"
     restart: "always"
+    user: "${USER_ID}:${GROUP_ID}"
     volumes:
       - "./stalwart:/opt/stalwart-mail"
       - "../acme.sh/certs:/certs:ro"

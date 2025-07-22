@@ -109,3 +109,5 @@ services:
       traefik.http.routers.anubis.priority: "1"
     networks:
       - "infra-1"
+    restart: "always"
+    user: "${USER_ID}:${GROUP_ID}"

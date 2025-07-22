@@ -29,5 +29,6 @@ services:
     networks:
       - "infra-1"
     restart: "always"
+    user: "${USER_ID}:${GROUP_ID}"
     volumes:
       - ./data:/app/data
