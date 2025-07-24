@@ -60,7 +60,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.traefik-dashboard.entrypoints: "websecure"
-      traefik.http.routers.traefik-dashboard.middlewares: "wg-local-accesslist@file,pocketid-oidc-auth@file"
+      traefik.http.routers.traefik-dashboard.middlewares: "local-accesslist@file,pocketid-oidc-auth@file"
       traefik.http.routers.traefik-dashboard.rule: "Host(`${TRAEFIK_DOMAIN}`)"
       traefik.http.routers.traefik-dashboard.service: "traefik-dashboard"
       traefik.http.routers.traefik-dashboard.tls: "true"

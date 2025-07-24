@@ -35,7 +35,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.grafana.entrypoints: "websecure"
-      traefik.http.routers.grafana.middlewares: "wg-local-accesslist@file"
+      traefik.http.routers.grafana.middlewares: "local-accesslist@file"
       traefik.http.routers.grafana.rule: "Host(`${GRAFANA_DOMAIN}`)"
       traefik.http.routers.grafana.service: "grafana"
       traefik.http.routers.grafana.tls: "true"
@@ -60,7 +60,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.prometheus.entrypoints: "websecure"
-      traefik.http.routers.prometheus.middlewares: "wg-local-accesslist@file,pocketid-oidc-auth@file"
+      traefik.http.routers.prometheus.middlewares: "local-accesslist@file,pocketid-oidc-auth@file"
       traefik.http.routers.prometheus.rule: "Host(`${PROMETHEUS_DOMAIN}`)"
       traefik.http.routers.prometheus.service: "prometheus"
       traefik.http.routers.prometheus.tls: "true"
