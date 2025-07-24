@@ -9,4 +9,10 @@
 		-Vary
 		-Server
 	}
+
+	@staticFiles {
+		path_regexp \.(tar|txt|ico|ttf|pdf|zst|xz|zip|iso|png|md|jpg|svg|js|css|apk|deb|tar\.zst|tar\.gz)$
+	}
+
+	header @staticFiles Cache-Control "public, s-maxage=31536000, immutable"
 }
