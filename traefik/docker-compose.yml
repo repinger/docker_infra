@@ -92,6 +92,7 @@ services:
     environment:
       BIND: ":8080"
       COOKIE_EXPIRATION_TIME: "8h"
+      DIFFICULTY: "6"
       ED25519_PRIVATE_KEY_HEX: "${ANUBIS_PRIVATE_KEY}"
       TARGET: "http://traefik:3923"
       TZ: "${TZ:-UTC}"
