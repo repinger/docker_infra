@@ -1,6 +1,6 @@
 http:
   middlewares:
-    wg-local-accesslist:
+    local-accesslist:
       ipAllowList:
         sourceRange:
           - "{{ env "PRIVATE_IPV4_RANGE" }}"
