@@ -3,13 +3,16 @@ name: "web"
 services:
   web-blackhole:
     container_name: "web-blackhole"
+    depends_on:
+      anubis:
+        condition: service_healthy
     environment:
       TZ: "${TZ:-UTC}"
     hostname: "web-blackhole"
     image: "macbre/nginx-http3:latest"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.web-blackhole.entrypoints: "websecure"
+      traefik.http.routers.web-blackhole.entrypoints: "anubis"
       traefik.http.routers.web-blackhole.middlewares: "web-comp@file"
       traefik.http.routers.web-blackhole.rule: "(
         Host(`mail.repinger.com`) && (Path(`/`) || Path(`/login`)) ||
@@ -29,7 +32,6 @@ services:
         Host(`doh.repinger.com`) && !Path(`/dns-query`) ||
         Host(`dot.repinger.com`) && !Path(`/dns-query`))"
       traefik.http.routers.web-blackhole.service: "web-blackhole"
-      traefik.http.routers.web-blackhole.tls: "true"
       traefik.http.services.web-blackhole.loadbalancer.server.port: "80"
     networks:
       - "infra-1"
@@ -40,6 +42,9 @@ services:
 
   web-dns:
     container_name: "web-dns"
+    depends_on:
+      anubis:
+        condition: service_healthy
     environment:
       TZ: "${TZ:-UTC}"
     hostname: "web-dns"
@@ -72,17 +77,19 @@ services:
 
   web-files:
     container_name: "web-files"
+    depends_on:
+      anubis:
+        condition: service_healthy
     environment:
       TZ: "${TZ:-UTC}"
     hostname: "web-files"
     image: "caddy:alpine"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.web-files.entrypoints: "websecure"
+      traefik.http.routers.web-files.entrypoints: "anubis"
       traefik.http.routers.web-files.middlewares: "web-comp@file,cf-ips-accesslist@file,web-files-headers"
       traefik.http.routers.web-files.rule: "Host(`files.repinger.com`)"
       traefik.http.routers.web-files.service: "web-files"
-      traefik.http.routers.web-files.tls: "true"
       traefik.http.services.web-files.loadbalancer.server.port: "80"
 
       traefik.http.middlewares.web-files-headers.headers.customresponseheaders.Permissions-Policy: "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()"
@@ -104,17 +111,19 @@ services:
 
   web-storage:
     container_name: "web-storage"
+    depends_on:
+      anubis:
+        condition: service_healthy
     environment:
       TZ: "${TZ:-UTC}"
     hostname: "web-storage"
     image: "macbre/nginx-http3:latest"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.web-storage.entrypoints: "websecure"
+      traefik.http.routers.web-storage.entrypoints: "anubis"
       traefik.http.routers.web-storage.middlewares: "web-comp@file,cf-ips-accesslist@file"
       traefik.http.routers.web-storage.rule: "Host(`storage.repinger.com`) || Host(`dump.repinger.com`)"
       traefik.http.routers.web-storage.service: "web-storage"
-      traefik.http.routers.web-storage.tls: "true"
       traefik.http.services.web-storage.loadbalancer.server.port: "80"
     networks:
       - "infra-1"
@@ -125,6 +134,9 @@ services:
 
   web-main:
     container_name: "web-main"
+    depends_on:
+      anubis:
+        condition: service_healthy
     environment:
       TZ: "${TZ:-UTC}"
     hostname: "web-main"
@@ -132,11 +144,10 @@ services:
     labels:
       traefik.enable: "true"
 
-      traefik.http.routers.web-main.entrypoints: "websecure"
+      traefik.http.routers.web-main.entrypoints: "anubis"
       traefik.http.routers.web-main.middlewares: "web-comp@file,main-webpage-header,cf-ips-accesslist@file"
       traefik.http.routers.web-main.rule: "Host(`repinger.com`)"
       traefik.http.routers.web-main.service: "web-main"
-      traefik.http.routers.web-main.tls: "true"
       traefik.http.services.web-main.loadbalancer.server.port: "80"
 
       traefik.http.middlewares.main-webpage-header.headers.customresponseheaders.Cache-Control: "public, no-cache"
