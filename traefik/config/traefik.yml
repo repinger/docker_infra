@@ -44,9 +44,6 @@ entryPoints:
     http3:
       advertisedPort: 443
 
-  anubis:
-    address: ":3923"
-
 providers:
   docker:
     exposedByDefault: false  # Default is true
