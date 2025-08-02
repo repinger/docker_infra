@@ -6,8 +6,6 @@ services:
     depends_on:
       adguardhome:
         condition: service_healthy
-      anubis:
-        condition: service_healthy
       crowdsec:
         condition: service_started
       doh-server:
@@ -32,9 +30,6 @@ services:
         condition: service_started
     environment:
       CROWDSEC_LAPI_KEY: "${TRAEFIK_CROWDSEC_LAPI_KEY}"
-
-      DOCKER_IPV4_RANGE: ${DOCKER_NET_IPV4_SUBNET}
-      DOCKER_IPV6_RANGE: ${DOCKER_NET_IPV6_SUBNET}
 
       OIDC_SECRET: "${TRAEFIK_OIDC_SECRET}"
 
@@ -89,34 +84,3 @@ services:
       - "./config:/etc/traefik:ro"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./logs:/var/log/traefik"
-
-  anubis:
-    container_name: "anubis"
-    environment:
-      BIND: ":8080"
-      COOKIE_EXPIRATION_TIME: "8h"
-      DIFFICULTY: "6"
-      ED25519_PRIVATE_KEY_HEX: "${ANUBIS_PRIVATE_KEY}"
-      TARGET: "http://traefik:3923"
-      TZ: "${TZ:-UTC}"
-      WEBMASTER_EMAIL: ${ANUBIS_WEBMASTER_EMAIL}
-    healthcheck:
-      test: ["CMD", "anubis", "--healthcheck"]
-      interval: 5s
-      timeout: 30s
-      retries: 5
-      start_period: 500ms
-    hostname: "anubis"
-    image: "ghcr.io/techarohq/anubis:v1.21.0"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.anubis.entrypoints: "websecure"
-      traefik.http.routers.anubis.rule: "PathRegexp(`.*`)"
-      traefik.http.routers.anubis.service: "anubis"
-      traefik.http.routers.anubis.tls: "true"
-      traefik.http.services.anubis.loadbalancer.server.port: "8080"
-      traefik.http.routers.anubis.priority: "1"
-    networks:
-      - "infra-1"
-    restart: "always"
-    user: "${USER_ID}:${GROUP_ID}"
