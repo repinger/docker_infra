@@ -1,0 +1,12 @@
+:80 {
+	file_server {
+		root /var/www/file
+		browse
+		hide .*
+	}
+
+	header {
+		-Vary
+		-Server
+	}
+}

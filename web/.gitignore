@@ -6,5 +6,4 @@
 !*/
 !**/.gitkeep
 !**/.editorconfig
-!/config/web.conf
-!/config/conf.d/*.conf
+!/config/**
