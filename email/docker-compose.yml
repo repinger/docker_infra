@@ -4,7 +4,7 @@ services:
   stalwart-email:
     container_name: "stalwart-email"
     hostname: "stalwart-email"
-    image: "stalwartlabs/mail-server:latest"
+    image: "stalwartlabs/stalwart:latest"
     environment:
       TZ: "${TZ:-UTC}"
     labels:
@@ -32,5 +32,5 @@ services:
     restart: "always"
     user: "${USER_ID}:${GROUP_ID}"
     volumes:
-      - "./stalwart:/opt/stalwart-mail"
+      - "./stalwart:/opt/stalwart"
       - "../acme.sh/certs:/certs:ro"
