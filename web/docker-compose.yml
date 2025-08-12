@@ -129,7 +129,7 @@ services:
       traefik.http.middlewares.storage-webpage-header.headers.customresponseheaders.Origin-Agent-Cluster: "?1"
       traefik.http.middlewares.storage-webpage-header.headers.customresponseheaders.X-Frame-Options: "DENY"
       traefik.http.middlewares.storage-webpage-header.headers.customresponseheaders.X-Xss-Protection: "0"
-      traefik.http.middlewares.storage-webpage-header.headers.customresponseheaders.X-Robots-Tag: "noindex, nofollow, nosnippet, noarchive"
+      traefik.http.middlewares.storage-webpage-header.headers.customresponseheaders.X-Robots-Tag: "none, nosnippet, noimageindex"
     networks:
       - "infra-1"
     restart: "always"
