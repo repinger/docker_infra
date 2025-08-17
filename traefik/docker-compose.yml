@@ -7,7 +7,7 @@ services:
       adguardhome:
         condition: service_healthy
       crowdsec:
-        condition: service_started
+        condition: service_healthy
       doh-server:
         condition: service_healthy
       grafana:
