@@ -62,7 +62,7 @@ services:
       traefik.http.middlewares.dns-webpage-header.headers.customresponseheaders.X-Xss-Protection: "0"
 
       traefik.http.routers.web-dns.entrypoints: "websecure"
-      traefik.http.routers.web-dns.middlewares: "crowdsec-traefik@file,web-comp@file,dns-webpage-header"
+      traefik.http.routers.web-dns.middlewares: "captcha-protect@file,crowdsec-traefik@file,web-comp@file,dns-webpage-header"
       traefik.http.routers.web-dns.rule: "Host(`dns.repinger.com`)"
       traefik.http.routers.web-dns.service: "web-dns"
       traefik.http.routers.web-dns.tls: "true"
@@ -80,7 +80,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.web-files.entrypoints: "websecure"
-      traefik.http.routers.web-files.middlewares: "web-comp@file,cf-ips-accesslist@file,web-files-headers"
+      traefik.http.routers.web-files.middlewares: "captcha-protect@file,web-comp@file,cf-ips-accesslist@file,web-files-headers"
       traefik.http.routers.web-files.rule: "Host(`files.repinger.com`)"
       traefik.http.routers.web-files.service: "web-files"
       traefik.http.routers.web-files.tls: "true"
@@ -112,7 +112,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.web-storage.entrypoints: "websecure"
-      traefik.http.routers.web-storage.middlewares: "web-comp@file,cf-ips-accesslist@file,storage-webpage-header"
+      traefik.http.routers.web-storage.middlewares: "captcha-protect@file,web-comp@file,cf-ips-accesslist@file,storage-webpage-header"
       traefik.http.routers.web-storage.rule: "Host(`storage.repinger.com`) || Host(`dump.repinger.com`)"
       traefik.http.routers.web-storage.service: "web-storage"
       traefik.http.routers.web-storage.tls: "true"
@@ -147,7 +147,7 @@ services:
       traefik.enable: "true"
 
       traefik.http.routers.web-main.entrypoints: "websecure"
-      traefik.http.routers.web-main.middlewares: "web-comp@file,main-webpage-header,cf-ips-accesslist@file"
+      traefik.http.routers.web-main.middlewares: "captcha-protect@file,web-comp@file,main-webpage-header,cf-ips-accesslist@file"
       traefik.http.routers.web-main.rule: "Host(`repinger.com`)"
       traefik.http.routers.web-main.service: "web-main"
       traefik.http.routers.web-main.tls: "true"
