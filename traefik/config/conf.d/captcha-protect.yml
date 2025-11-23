@@ -1,0 +1,12 @@
+http:
+  middlewares:
+    captcha-protect:
+      plugin:
+        captcha-protect:
+          ipv4subnetMask: 8
+          protectRoutes: "/"
+          captchaProvider: "turnstile"
+          siteKey: {{ env "CAPTCHA_PROTECT_SITEKEY" }}
+          secretKey: {{ env "CAPTCHA_PROTECT_SECRETKEY" }}
+          periodSeconds: 30
+          failureThreshold: 3

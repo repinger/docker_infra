@@ -29,6 +29,9 @@ services:
       stalwart-email:
         condition: service_started
     environment:
+      CAPTCHA_PROTECT_SITEKEY: "${TRAEFIK_CAPTCHA_PROTECT_SITEKEY}"
+      CAPTCHA_PROTECT_SECRETKEY: "${TRAEFIK_CAPTCHA_PROTECT_SECRETKEY}"
+
       CROWDSEC_LAPI_KEY: "${TRAEFIK_CROWDSEC_LAPI_KEY}"
 
       OIDC_SECRET: "${TRAEFIK_OIDC_SECRET}"
