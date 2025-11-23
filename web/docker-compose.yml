@@ -18,14 +18,10 @@ services:
         Host(`mta-sts.repinger.com`) && (Path(`/`) || Path(`/login`)) ||
         Host(`evan.repinger.com`) ||
         Host(`file.repinger.com`) ||
-        Host(`file.repinger.my.id`) ||
-        Host(`files.repinger.my.id`) ||
-        Host(`repinger.my.id`) ||
-        Host(`www.repinger.my.id`) ||
+        Host(`file.repinger.com`) ||
         Host(`www.repinger.com`) ||
-        Host(`dns.repinger.my.id`) && !Path(`/dns-query`) ||
-        Host(`doh.repinger.my.id`) && !Path(`/dns-query`) ||
-        Host(`dot.repinger.my.id`) && !Path(`/dns-query`) ||
+        Host(`doh.repinger.com`) && !Path(`/dns-query`) ||
+        Host(`dot.repinger.com`) && !Path(`/dns-query`) ||
         Host(`doh.repinger.com`) && !Path(`/dns-query`) ||
         Host(`dot.repinger.com`) && !Path(`/dns-query`))"
       traefik.http.routers.web-blackhole.service: "web-blackhole"
