@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Verifying connection</title>
+
+    <script
+      src="{{ .FrontendJS }}"
+      async
+      defer
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <style>
+      :root {
+        --page-bg: #f3f4f6;
+        --card-bg: #ffffff;
+        --text-main: #111827;
+        --text-sub: #6b7280;
+        --accent: #3b82f6;
+        --spinner-track: #e5e7eb;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --page-bg: #0f172a;
+          --card-bg: #1e293b;
+          --text-main: #f3f4f6;
+          --text-sub: #9ca3af;
+          --accent: #60a5fa;
+          --spinner-track: #334155;
+          --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+      }
+
+      body {
+        font-family: system-ui, -apple-system, sans-serif;
+        background-color: var(--page-bg);
+        color: var(--text-main);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .verification-card {
+        background-color: var(--card-bg);
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        max-width: 420px;
+        width: 100%;
+        transition: background-color 0.3s ease;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+      }
+
+      p {
+        color: var(--text-sub);
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+      }
+
+      .captcha-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+        min-height: 74px;
+        overflow: hidden;
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid var(--spinner-track);
+        border-top: 4px solid var(--accent);
+        border-radius: 50%;
+        margin: 0 auto 1.5rem auto;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      @media (max-width: 480px) {
+        body { padding: 12px; }
+        .verification-card { padding: 2rem 1rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="verification-card">
+      <div class="spinner"></div>
+      <h1>Verifying connection</h1>
+      <p>Please wait a moment while we verify your network connection.</p>
+
+      <form
+        action="{{ .ChallengeURL }}"
+        method="post"
+        id="captcha-form"
+        accept-charset="UTF-8"
+      >
+        <div class="captcha-container">
+          <div
+            data-callback="captchaCallback"
+            class="{{ .FrontendKey }}"
+            data-sitekey="{{ .SiteKey }}"
+            data-theme="auto"
+            data-size="normal"
+            data-language="auto"
+            data-retry="auto"
+            interval="8000"
+            data-appearance="always"
+          ></div>
+        </div>
+        <input type="hidden" name="destination" value="{{ .Destination }}" />
+      </form>
+    </div>
+
+    <script type="text/javascript">
+      function captchaCallback(token) {
+          setTimeout(function() {
+              document.getElementById("captcha-form").submit();
+          }, 1000);
+      }
+    </script>
+  </body>
+</html>

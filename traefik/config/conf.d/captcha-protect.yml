@@ -10,3 +10,4 @@ http:
           secretKey: {{ env "CAPTCHA_PROTECT_SECRETKEY" }}
           periodSeconds: 30
           failureThreshold: 3
+          challengeTmpl: "/etc/traefik/conf.d/misc/challenge.tmpl.html"
