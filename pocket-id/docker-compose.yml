@@ -9,6 +9,7 @@ services:
       APP_URL: "https://${POCKET_ID_DOMAIN}"
       DISABLE_ANIMATIONS: "true"
       TRUST_PROXY: "true"
+      ENCRYPTION_KEY: "${POCKET_ID_ENC_KEY}"
       TZ: "${TZ:-UTC}"
     healthcheck:
       test: [ "CMD", "/app/pocket-id", "healthcheck" ]
