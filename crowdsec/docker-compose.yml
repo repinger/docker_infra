@@ -7,11 +7,11 @@ services:
       COLLECTIONS: "crowdsecurity/endlessh crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve crowdsecurity/linux crowdsecurity/iptables"
       TZ: "${TZ:-UTC}"
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://crowdsec:8080/health"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD", "cscli", "lapi", "status"]
+      interval: 10s
+      timeout: 5s
       retries: 3
-      start_period: 15s
+      start_period: 30s
     hostname: "crowdsec"
     image: "crowdsecurity/crowdsec:latest"
     networks:
