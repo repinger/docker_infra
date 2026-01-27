@@ -4,7 +4,7 @@ services:
   stalwart-email:
     container_name: "stalwart-email"
     hostname: "stalwart-email"
-    image: "stalwartlabs/stalwart:latest"
+    image: "stalwartlabs/stalwart:latest-alpine"
     environment:
       TZ: "${TZ:-UTC}"
     labels:
