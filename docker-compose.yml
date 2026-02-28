@@ -4,6 +4,9 @@ include:
   # Acme.sh
   - path: acme.sh/docker-compose.yml
 
+  # Backrest
+  - path: backrest/docker-compose.yml
+
   # CrowdSec
   - path: crowdsec/docker-compose.yml
 
@@ -15,9 +18,6 @@ include:
 
   # Pocket-ID
   - path: pocket-id/docker-compose.yml
-
-  # Rsync backup
-  - path: rclone/docker-compose.yml
 
   # Reverse proxy
   - path: traefik/docker-compose.yml

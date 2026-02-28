@@ -1,0 +1,26 @@
+name: "backrest"
+
+services:
+  backrest:
+    container_name: "backrest"
+    hostname: "backrest"
+    image: "garethgeorge/backrest:latest"
+    environment:
+      TZ: "${TZ:-UTC}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.backups.entrypoints: "websecure"
+      traefik.http.routers.backups.middlewares: "local-accesslist@file,pocketid-oidc-auth@file"
+      traefik.http.routers.backups.rule: "Host(`${BACKREST_DOMAIN}`)"
+      traefik.http.routers.backups.service: "backups"
+      traefik.http.routers.backups.tls: "true"
+      traefik.http.services.backups.loadbalancer.server.port: "9898"
+    networks:
+      - "infra-1"
+    restart: "always"
+    volumes:
+      - ./config:/config
+      - ./rclone:/root/.config/rclone
+      - ./data:/data
+      - ../:/backups/infra
+      - /var/run/docker.sock:/var/run/docker.sock:ro
