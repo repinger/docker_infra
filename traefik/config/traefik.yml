@@ -15,13 +15,13 @@ experimental:
   plugins:
     crowdsec-bouncer:
       moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
-      version: "v1.4.6"
+      version: "v1.5.1"
     traefik-oidc-auth:
       moduleName: "github.com/sevensolutions/traefik-oidc-auth"
-      version: "v0.17.0"
+      version: "v0.18.0"
     captcha-protect:
       moduleName: "github.com/libops/captcha-protect"
-      version: "v1.12.0"
+      version: "v1.12.1"
 
 # (Optional) Enable API and Dashboard
 # ---
