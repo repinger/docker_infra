@@ -1,11 +1,41 @@
 http:
   middlewares:
-    pocketid-oidc-auth:
+    adguardhome-oidc-auth:
       plugin:
         traefik-oidc-auth:
-          Secret: "{{ env "OIDC_SECRET" }}"
+          Secret: "{{ env "ADGUARDHOME_OIDC_SECRET" }}"
           Provider:
-            Url: "{{ env "POCKETID_OIDC_AUTH_URL" }}"
-            ClientId: "{{ env "POCKETID_OIDC_AUTH_CLIENT_ID" }}"
-            ClientSecret: "{{ env "POCKETID_OIDC_AUTH_CLIENT_SECRET" }}"
+            Url: "{{ env "POCKET_ID_DOMAIN" }}"
+            ClientId: "{{ env "ADGUARDHOME_OIDC_CLIENT_ID" }}"
+            ClientSecret: "{{ env "ADGUARDHOME_OIDC_CLIENT_SECRET" }}"
+            UsePkce: true
+
+    backrest-oidc-auth:
+      plugin:
+        traefik-oidc-auth:
+          Secret: "{{ env "BACKREST_OIDC_SECRET" }}"
+          Provider:
+            Url: "{{ env "POCKET_ID_DOMAIN" }}"
+            ClientId: "{{ env "BACKREST_OIDC_CLIENT_ID" }}"
+            ClientSecret: "{{ env "BACKREST_OIDC_CLIENT_SECRET" }}"
+            UsePkce: true
+
+    prometheus-oidc-auth:
+      plugin:
+        traefik-oidc-auth:
+          Secret: "{{ env "PROMETHEUS_OIDC_SECRET" }}"
+          Provider:
+            Url: "{{ env "POCKET_ID_DOMAIN" }}"
+            ClientId: "{{ env "PROMETHEUS_OIDC_CLIENT_ID" }}"
+            ClientSecret: "{{ env "PROMETHEUS_OIDC_CLIENT_SECRET" }}"
+            UsePkce: true
+
+    traefik-dashboard-oidc-auth:
+      plugin:
+        traefik-oidc-auth:
+          Secret: "{{ env "TRAEFIK_OIDC_SECRET" }}"
+          Provider:
+            Url: "{{ env "POCKET_ID_DOMAIN" }}"
+            ClientId: "{{ env "TRAEFIK_OIDC_CLIENT_ID" }}"
+            ClientSecret: "{{ env "TRAEFIK_OIDC_SECRET_KEY" }}"
             UsePkce: true

@@ -10,7 +10,7 @@ services:
     labels:
       traefik.enable: "true"
       traefik.http.routers.backups.entrypoints: "websecure"
-      traefik.http.routers.backups.middlewares: "local-accesslist@file,pocketid-oidc-auth@file"
+      traefik.http.routers.backups.middlewares: "local-accesslist@file,backrest-oidc-auth@file"
       traefik.http.routers.backups.rule: "Host(`${BACKREST_DOMAIN}`)"
       traefik.http.routers.backups.service: "backups"
       traefik.http.routers.backups.tls: "true"
