@@ -6,8 +6,8 @@ http:
           ipv4subnetMask: 8
           protectRoutes: "/"
           captchaProvider: "turnstile"
-          siteKey: {{ env "CAPTCHA_PROTECT_SITEKEY" }}
-          secretKey: {{ env "CAPTCHA_PROTECT_SECRETKEY" }}
+          siteKey: {{ env "TRAEFIK_CAPTCHA_PROTECT_SITEKEY" }}
+          secretKey: {{ env "TRAEFIK_CAPTCHA_PROTECT_SECRETKEY" }}
           periodSeconds: 30
           failureThreshold: 3
           challengeTmpl: "/etc/traefik/conf.d/misc/challenge.tmpl.html"

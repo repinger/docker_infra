@@ -5,6 +5,6 @@ http:
         crowdsec-bouncer:
           enabled: "true"
           crowdsecLapiHost: "crowdsec:8080"
-          crowdsecLapiKey: {{ env "CROWDSEC_LAPI_KEY" }}
+          crowdsecLapiKey: {{ env "TRAEFIK_CROWDSEC_LAPI_KEY" }}
           crowdsecMode: "stream"
           updateIntervalSeconds: "10"

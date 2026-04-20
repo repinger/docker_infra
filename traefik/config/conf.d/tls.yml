@@ -1,9 +1,9 @@
 tls:
   certificates:
-    - certFile: {{ env "PUBLIC_CERT_FILE" }}
-      keyFile: {{ env "PUBLIC_CERT_KEY" }}
-    - certFile: {{ env "PRIVATE_CERT_FILE" }}
-      keyFile: {{ env "PRIVATE_CERT_KEY" }}
+    - certFile: {{ env "TRAEFIK_PUBLIC_CERT_FILE" }}
+      keyFile: {{ env "TRAEFIK_PUBLIC_CERT_KEY" }}
+    - certFile: {{ env "TRAEFIK_PRIVATE_CERT_FILE" }}
+      keyFile: {{ env "TRAEFIK_PRIVATE_CERT_KEY" }}
   options:
     default:
       sniStrict: true

@@ -3,5 +3,5 @@ http:
     local-accesslist:
       ipAllowList:
         sourceRange:
-          - "{{ env "PRIVATE_IPV4_RANGE" }}"
-          - "{{ env "PRIVATE_IPV6_RANGE" }}"
+          - "{{ env "PRIVATE_IPV4_SUBNET" }}"
+          - "{{ env "PRIVATE_IPV6_SUBNET" }}"
