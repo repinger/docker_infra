@@ -16,8 +16,6 @@ services:
         condition: service_started
       web-dns:
         condition: service_started
-      web-files:
-        condition: service_started
       web-main:
         condition: service_started
       web-storage:

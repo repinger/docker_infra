@@ -66,38 +66,6 @@ services:
       - "infra-1"
     restart: "always"
 
-  web-files:
-    container_name: "web-files"
-    environment:
-      TZ: "${TZ:-UTC}"
-    hostname: "web-files"
-    image: "caddy:alpine"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.web-files.entrypoints: "websecure"
-      traefik.http.routers.web-files.middlewares: "captcha-protect@file,web-comp@file,cf-ips-accesslist@file,web-files-headers"
-      traefik.http.routers.web-files.rule: "Host(`files.repinger.com`)"
-      traefik.http.routers.web-files.service: "web-files"
-      traefik.http.routers.web-files.tls: "true"
-      traefik.http.services.web-files.loadbalancer.server.port: "80"
-
-      traefik.http.middlewares.web-files-headers.headers.customresponseheaders.Permissions-Policy: "accelerometer=(), ambient-light-sensor=(), autoplay=(), battery=(), camera=(), cross-origin-isolated=(), display-capture=(), document-domain=(), encrypted-media=(), execution-while-not-rendered=(), execution-while-out-of-viewport=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), navigation-override=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), web-share=(), xr-spatial-tracking=()"
-      traefik.http.middlewares.web-files-headers.headers.customresponseheaders.Strict-Transport-Security: "max-age=63072000; includeSubDomains; preload"
-      traefik.http.middlewares.web-files-headers.headers.customresponseheaders.X-Content-Type-Options: "nosniff"
-      traefik.http.middlewares.web-files-headers.headers.customresponseheaders.Referrer-Policy: "no-referrer"
-      traefik.http.middlewares.web-files-headers.headers.customresponseheaders.Cross-Origin-Opener-Policy: "same-origin"
-      traefik.http.middlewares.web-files-headers.headers.customresponseheaders.Cross-Origin-Embedder-Policy: "require-corp"
-      traefik.http.middlewares.web-files-headers.headers.customresponseheaders.Origin-Agent-Cluster: "?1"
-      traefik.http.middlewares.web-files-headers.headers.customresponseheaders.X-Frame-Options: "DENY"
-      traefik.http.middlewares.web-files-headers.headers.customresponseheaders.X-Xss-Protection: "0"
-    networks:
-      - "infra-1"
-    restart: "always"
-    user: "${USER_ID}:${GROUP_ID}"
-    volumes:
-      - "./config/caddy:/etc/caddy:ro"
-      - "${WEB_DIR}:/var/www"
-
   web-storage:
     container_name: "web-storage"
     environment:
