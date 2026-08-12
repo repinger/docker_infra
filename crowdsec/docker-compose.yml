@@ -13,14 +13,14 @@ services:
       retries: 3
       start_period: 30s
     hostname: "crowdsec"
-    image: "crowdsecurity/crowdsec:latest"
+    image: "crowdsecurity/crowdsec:latest-debian"
     networks:
       infra-1:
         ipv4_address: "${CROWDSEC_IP_ADDR}"
     restart: "always"
-    user: "${USER_ID}:${GROUP_ID}"
     volumes:
       - "./data/config:/etc/crowdsec"
+      - "/var/log/journal:/run/log/journal:ro"
       - "./data/db:/var/lib/crowdsec/data"
       - "/var/log:/var/log:ro"
       - "../traefik/logs:/logs/traefik:ro"
