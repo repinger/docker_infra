@@ -23,5 +23,5 @@ services:
       - "/var/log/journal:/run/log/journal:ro"
       - "./data/db:/var/lib/crowdsec/data"
       - "/var/log:/var/log:ro"
-      - "../traefik/logs:/logs/traefik:ro"
+      - "../proxy/logs:/logs/traefik:ro"
       - "../endlessh/logs:/logs/endlessh:ro"

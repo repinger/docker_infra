@@ -20,7 +20,7 @@ include:
   - path: pocket-id/docker-compose.yml
 
   # Reverse proxy
-  - path: traefik/docker-compose.yml
+  - path: proxy/docker-compose.yml
 
   # Monitoring
   - path: monitoring/docker-compose.yml
