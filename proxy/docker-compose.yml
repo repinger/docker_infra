@@ -18,8 +18,6 @@ services:
         condition: service_started
       web-main:
         condition: service_started
-      web-storage:
-        condition: service_started
       pocket-id:
         condition: service_healthy
       prometheus:
