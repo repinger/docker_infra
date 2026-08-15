@@ -56,3 +56,6 @@ providers:
     watch: false
 
 ping: {}
+
+metrics:
+  prometheus: {}
