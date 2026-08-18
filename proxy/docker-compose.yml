@@ -11,7 +11,7 @@ services:
       doh-server:
         condition: service_healthy
       grafana:
-        condition: service_healthy
+        condition: service_started
       web-blackhole:
         condition: service_started
       web-dns:
