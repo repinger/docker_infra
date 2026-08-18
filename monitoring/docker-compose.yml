@@ -7,7 +7,7 @@ services:
       endlessh:
         condition: service_started
       prometheus:
-        condition: service_healthy
+        condition: service_started
     environment:
       GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP: "true"
       GF_AUTH_GENERIC_OAUTH_API_URL: "https://${POCKET_ID_DOMAIN}/api/oidc/userinfo"
@@ -58,14 +58,8 @@ services:
 
   prometheus:
     container_name: "prometheus"
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "http://prometheus:9090/-/healthy" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
     hostname: "prometheus"
-    image: "prom/prometheus:latest"
+    image: "prom/prometheus:latest-distroless"
     labels:
       traefik.enable: "true"
       traefik.http.routers.prometheus.entrypoints: "websecure"

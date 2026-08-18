@@ -21,7 +21,7 @@ services:
       pocket-id:
         condition: service_healthy
       prometheus:
-        condition: service_healthy
+        condition: service_started
       stalwart-email:
         condition: service_started
     environment:
