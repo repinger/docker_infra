@@ -21,7 +21,7 @@ experimental:
       version: "v0.21.0"
     captcha-protect:
       moduleName: "github.com/libops/captcha-protect"
-      version: "v1.14.0"
+      version: "v1.15.1"
 
 # (Optional) Enable API and Dashboard
 # ---
