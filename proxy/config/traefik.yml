@@ -37,6 +37,7 @@ entryPoints:
     # (Optional) Redirect to HTTPS
     # ---
     http:
+      aliasHeadersStrategy: "reject"
       redirections:
         entryPoint:
           to: websecure
@@ -70,6 +71,8 @@ entryPoints:
 
   websecure:
     address: :443
+    http:
+      aliasHeadersStrategy: "reject"
     http3:
       advertisedPort: 443
     forwardedHeaders:
