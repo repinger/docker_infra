@@ -20,6 +20,16 @@ http:
             ClientSecret: "{{ env "BACKREST_OIDC_CLIENT_SECRET" }}"
             UsePkce: true
 
+    cadvisor-oidc-auth:
+      plugin:
+        traefik-oidc-auth:
+          Secret: "{{ env "CADVISOR_OIDC_SECRET" }}"
+          Provider:
+            Url: "{{ env "POCKET_ID_DOMAIN" }}"
+            ClientId: "{{ env "CADVISOR_OIDC_CLIENT_ID" }}"
+            ClientSecret: "{{ env "CADVISOR_OIDC_CLIENT_SECRET" }}"
+            UsePkce: true
+
     prometheus-oidc-auth:
       plugin:
         traefik-oidc-auth:

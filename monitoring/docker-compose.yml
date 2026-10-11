@@ -1,6 +1,31 @@
 name: "monitoring"
 
 services:
+  cadvisor:
+    container_name: "cadvisor"
+    hostname: "cadvisor"
+    image: "ghcr.io/google/cadvisor:latest"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.cadvisor.entrypoints: "websecure"
+      traefik.http.routers.cadvisor.middlewares: "local-accesslist@file,cadvisor-oidc-auth@file"
+      traefik.http.routers.cadvisor.rule: "Host(`${CADVISOR_DOMAIN}`)"
+      traefik.http.routers.cadvisor.service: "cadvisor"
+      traefik.http.routers.cadvisor.tls: "true"
+      traefik.http.services.cadvisor.loadbalancer.server.port: "8080"
+    networks:
+      - "infra-1"
+    privileged: true
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
+    restart: "always"
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+
   grafana:
     container_name: "grafana"
     depends_on:
